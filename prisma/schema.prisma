@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model LearnerProfile {
+  id        String   @id @default("local-learner")
+  name      String   @default("SV1 Learner")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MissionProgress {
+  id             String    @id @default(cuid())
+  missionId      String    @unique
+  status         String    @default("NOT_STARTED")
+  completedSteps String    @default("[]")
+  startedAt      DateTime?
+  completedAt    DateTime?
+  score          Int?
+  notes          String?
+  hardGatePassed Boolean   @default(false)
+  updatedAt      DateTime  @updatedAt
+}
+
+model Evidence {
+  id        String   @id @default(cuid())
+  missionId String
+  skillId   String?
+  type      String
+  title     String
+  content   String
+  url       String?
+  createdAt DateTime @default(now())
+
+  @@index([missionId, createdAt])
+  @@index([skillId, createdAt])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  quizId    String
+  missionId String
+  score     Int
+  passed    Boolean
+  answers   String
+  createdAt DateTime @default(now())
+
+  @@index([missionId, createdAt])
+}
+
+model IncidentAttempt {
+  id              String   @id @default(cuid())
+  incidentId      String
+  symptom         String
+  evidence        String
+  hypothesis      String
+  test            String
+  result          String
+  rootCause       String
+  fix             String
+  verification    String
+  regression      String
+  assisted        Boolean  @default(false)
+  assistanceLevel String   @default("NONE")
+  passed          Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@index([incidentId, createdAt])
+}
+
+model IncidentAssistance {
+  incidentId String   @id
+  level      String   @default("NONE")
+  updatedAt  DateTime @updatedAt
+}
+
+model SkillProgress {
+  id            String   @id
+  currentLevel  Int      @default(0)
+  targetLevel   Int
+  evidenceCount Int      @default(0)
+  updatedAt     DateTime @updatedAt
+}
+
+model AppSettings {
+  id                String  @id @default("local-settings")
+  acceleratedMode   Boolean @default(false)
+  dailyStudyMinutes Int     @default(240)
+  currentWeek       Int     @default(1)
+  currentMission    String  @default("w1-m1-linux-orientation")
+}
+
+model MissionNote {
+  id        String   @id @default(cuid())
+  missionId String   @unique
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Bookmark {
+  id         String   @id @default(cuid())
+  targetType String
+  targetId   String
+  label      String
+  createdAt  DateTime @default(now())
+
+  @@unique([targetType, targetId])
+  @@index([targetType, createdAt])
+}
+
+model WeeklyProgress {
+  week           Int      @id
+  hardGatePassed Boolean  @default(false)
+  passedAt       DateTime?
+  updatedAt      DateTime @updatedAt
+}
+
+model OralReflection {
+  id         String   @id @default(cuid())
+  questionId String
+  group      String
+  response   String
+  confident  Boolean
+  createdAt  DateTime @default(now())
+
+  @@index([questionId, createdAt])
+  @@index([group, createdAt])
+}

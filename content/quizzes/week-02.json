@@ -1,0 +1,497 @@
+{
+  "w2-m1-docker-image-container": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Docker Image, Container & Dockerfile?",
+      "options": [
+        "Image là artifact layered; container là runtime instance được tạo từ image.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Image là artifact layered; container là runtime instance được tạo từ image.",
+      "explanation": "An image is a content-addressed, layered filesystem plus runtime metadata. A container is an isolated runtime instance of an image. Docker sends the selected build context to the builder, executes Dockerfile instructions, reuses cacheable layers, then starts the configured process through CMD/ENTRYPOINT."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: build/run/inspect/log relevant lines",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: build/run/inspect/log relevant lines",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Đọc first relevant build/runtime error rồi đối chiếu Dockerfile, build context và process command.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Đọc first relevant build/runtime error rồi đối chiếu Dockerfile, build context và process command.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Lệnh nào tạo image từ Dockerfile và build context?",
+      "answer": "docker build",
+      "explanation": "docker build gửi context và thực thi Dockerfile để tạo image."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích Dockerfile → layer → image → container và vì sao sửa trong container không phải release fix.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m2-compose-contracts": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Compose Service Contracts?",
+      "options": [
+        "Compose là declarative multi-service runtime contract; functional PASS vẫn cần health và use-case test.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Compose là declarative multi-service runtime contract; functional PASS vẫn cần health và use-case test.",
+      "explanation": "A Compose model declares services and their image/build source, process environment, network attachments, published ports, persistent mounts, healthchecks, restart policy and dependency conditions. The resolved model is the source for runtime orchestration, not a substitute for functional tests."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: resolved Compose excerpt không chứa secret",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: resolved Compose excerpt không chứa secret",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Chạy docker compose config và so resolved service/port/env/network với expected contract.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Chạy docker compose config và so resolved service/port/env/network với expected contract.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Lệnh nào validate và render Compose model đã resolve?",
+      "answer": "docker compose config",
+      "explanation": "config parse, interpolate và hiển thị model mà engine sẽ dùng."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích build/image, ports, depends_on, healthcheck và restart trong một Compose service.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m3-docker-network-dns": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Docker Network, Service DNS & localhost Trap?",
+      "options": [
+        "Containers cùng network gọi nhau bằng service name và internal port; localhost luôn quay lại chính namespace gọi.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Containers cùng network gọi nhau bằng service name và internal port; localhost luôn quay lại chính namespace gọi.",
+      "explanation": "A user-defined bridge network provides isolated L2/L3 connectivity and embedded DNS for service aliases. Network namespaces make loopback local to each container. Published ports install host-to-container forwarding; container-to-container traffic normally uses the destination service's internal port."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: DNS + TCP + network membership",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: DNS + TCP + network membership",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Từ đúng source container, test service-name resolution rồi TCP tới internal port.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Từ đúng source container, test service-name resolution rồi TCP tới internal port.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Backend trong Compose nên dùng hostname nào để gọi service postgres?",
+      "answer": "postgres",
+      "explanation": "Embedded DNS resolve service name postgres trong Compose network."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích service DNS, localhost và internal/published port bằng hai đường gọi cụ thể.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m4-volume-persistence": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Volumes, Bind Mounts & Persistence?",
+      "options": [
+        "Named volume tách data lifecycle khỏi container lifecycle; removing the volume is destructive.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Named volume tách data lifecycle khỏi container lifecycle; removing the volume is destructive.",
+      "explanation": "Docker mounts replace a container path with storage managed by a named volume or a host bind source. Container recreation preserves named-volume data when the same volume is reattached. Removing a volume destroys its stored filesystem and is a separate lifecycle operation."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: container ID trước/sau + marker còn tồn tại",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: container ID trước/sau + marker còn tồn tại",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "So docker compose config/inspect mount source-target và đọc marker data từ service stateful.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "So docker compose config/inspect mount source-target và đọc marker data từ service stateful.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Option nào của docker compose down xóa named volumes?",
+      "answer": "-v",
+      "explanation": "down -v removes named and anonymous volumes declared/attached by the project."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích restart, recreate, down và down -v tác động khác nhau lên container/data.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m5-environment-secrets": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Environment Contracts, Secrets & Validation?",
+      "options": [
+        "Host interpolation, container environment and application validation are separate links in one configuration chain.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Host interpolation, container environment and application validation are separate links in one configuration chain.",
+      "explanation": "Configuration is a versioned contract of required names and semantics. Compose interpolation resolves host-side values before container creation; container environment is runtime process input. Secret material follows the same transport but requires restricted storage, redaction and rotation procedures."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: env contract redacted",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: env contract redacted",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Inspect resolved Compose config and validate required variable presence without printing its value.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Inspect resolved Compose config and validate required variable presence without printing its value.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "File nào nên commit để mô tả required environment names?",
+      "answer": ".env.example",
+      "explanation": ".env.example documents the contract using safe placeholders; real .env stays untracked."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích .env → Compose interpolation → container env → app validation và secret boundary.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m6-health-logs-readiness": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Healthchecks, Logs & Dependency Readiness?",
+      "options": [
+        "Running, healthy and functional are distinct; health-based startup ordering does not replace application recovery.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Running, healthy and functional are distinct; health-based startup ordering does not replace application recovery.",
+      "explanation": "A container healthcheck produces a runtime health state from repeated command exit codes. Readiness asks whether a service can receive dependent traffic; liveness asks whether it should be restarted. Compose service_healthy can delay dependent startup but does not replace application retry/recovery after startup."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: ps/health history/pg_isready/curl",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: ps/health history/pg_isready/curl",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Inspect health history and run the health command manually in the same container context.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Inspect health history and run the health command manually in the same container context.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "PostgreSQL readiness command phổ biến là gì?",
+      "answer": "pg_isready",
+      "explanation": "pg_isready checks whether a PostgreSQL server accepts connections."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích interval, timeout, retries, start_period và giới hạn của service_healthy.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m7-http-api-openapi": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất HTTP, REST, JSON & OpenAPI Support?",
+      "options": [
+        "HTTP success at transport/endpoint level must still be checked against the documented API and business expectation.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "HTTP success at transport/endpoint level must still be checked against the documented API and business expectation.",
+      "explanation": "HTTP is a request-response application protocol. REST-style APIs expose resource-oriented representations and semantics through methods, URLs, headers, status codes and JSON bodies. OpenAPI is a machine-readable contract for operations, schemas, parameters, responses and security requirements."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "test-result: method/status/schema matrix",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "test-result: method/status/schema matrix",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Capture method, URL, status, relevant headers/body and compare the operation with OpenAPI.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Capture method, URL, status, relevant headers/body and compare the operation with OpenAPI.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Header nào thường khai báo JSON request body?",
+      "answer": "Content-Type: application/json",
+      "explanation": "Content-Type tells the server how to parse the request representation."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Phân biệt refused, HTTP 404, validation 4xx, 401, 403 và 500 theo layer/owner.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m8-postgresql-migration-seed": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất PostgreSQL, SQL, Migration & Seed Support?",
+      "options": [
+        "Database readiness, authentication, schema migration, seed state and business correctness are separate checkpoints.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Database readiness, authentication, schema migration, seed state and business correctness are separate checkpoints.",
+      "explanation": "PostgreSQL organizes databases into schemas and relational tables constrained by keys and rules. SQL SELECT/INSERT/UPDATE/DELETE and JOIN manipulate/query rows. A connection URL carries protocol, credentials, host, port and database. Migrations apply ordered schema changes; seeds establish known reference/demo state."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: readiness/psql/table/count",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: readiness/psql/table/count",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Test pg_isready, authenticated psql and migration status in that order before touching domain data.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Test pg_isready, authenticated psql and migration status in that order before touching domain data.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Lệnh CLI chuẩn để mở PostgreSQL SQL session là gì?",
+      "answer": "psql",
+      "explanation": "psql is the PostgreSQL interactive terminal/client."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích DATABASE_URL và chuỗi DNS→TCP→auth→database→schema→migration→seed→business query.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w2-m9-reverse-proxy-integration": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Reverse Proxy & Multi-layer API Integration?",
+      "options": [
+        "Reverse proxy and upstream are separate hops; test external route and internal upstream to localize 502/504.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Reverse proxy and upstream are separate hops; test external route and internal upstream to localize 502/504.",
+      "explanation": "A reverse proxy terminates a client-facing connection and creates an upstream request according to routing rules. Gateway 502 commonly signals invalid/unreachable upstream response; 504 signals upstream timeout. Internal service URLs and public browser URLs inhabit different name/port scopes."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: external vs internal curl and relevant logs",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: external vs internal curl and relevant logs",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Call the upstream from proxy network context and compare with the external URL plus both service logs.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Call the upstream from proxy network context and compare with the external URL plus both service logs.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "HTTP status nào thường chỉ proxy không nhận response hợp lệ từ upstream?",
+      "answer": "502",
+      "explanation": "502 Bad Gateway indicates a gateway/proxy received an invalid or unavailable upstream response."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Giải thích Browser→proxy→Backend→Postgres bằng hostname/port/network/status và test order.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ]
+}

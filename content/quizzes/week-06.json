@@ -1,0 +1,332 @@
+{
+  "w6-m1-rag-architecture-boundary": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất RAG Architecture & SV1/SV3 Boundary?",
+      "options": [
+        "SV1 owns RAG infrastructure readiness and dependency triage, while SV3 owns retrieval strategy, prompt and answer-quality reasoning.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "SV1 owns RAG infrastructure readiness and dependency triage, while SV3 owns retrieval strategy, prompt and answer-quality reasoning.",
+      "explanation": "Retrieval-augmented generation indexes embedded document chunks in a vector database, retrieves candidate context for a query, and supplies it to an LLM for response generation. Infrastructure availability/configuration is distinct from retrieval relevance and model reasoning behavior."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "explanation: RAG dependency/ownership map",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "explanation: RAG dependency/ownership map",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Check RAG process/health, Qdrant reachability/collection and Ollama reachability/model before examining retrieval quality.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Check RAG process/health, Qdrant reachability/collection and Ollama reachability/model before examining retrieval quality.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Vector database service in this roadmap is what?",
+      "answer": "Qdrant",
+      "explanation": "Qdrant stores/querys vector collections and associated payloads for RAG retrieval."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain document→chunk→embedding→Qdrant→retrieval→context→Ollama and mark SV1 versus SV3 boundaries.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w6-m2-qdrant-deployment-persistence": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Qdrant Deployment, Collections & Persistence?",
+      "options": [
+        "Qdrant is a stateful vector service whose reachable URL, collection state and persistent volume must all be verified independently.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Qdrant is a stateful vector service whose reachable URL, collection state and persistent volume must all be verified independently.",
+      "explanation": "Qdrant stores vector points organized in collections with vectors and payload metadata. It exposes HTTP APIs and persists data through configured storage. Client configuration uses a QDRANT_URL endpoint reachable within the service network; collection configuration must match embedding producer contract."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: health/collections/log/volume evidence",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: health/collections/log/volume evidence",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "From RAG network context resolve qdrant, reach its internal health API and inspect required collection before changing retrieval code.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "From RAG network context resolve qdrant, reach its internal health API and inspect required collection before changing retrieval code.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Qdrant logical container for vectors and payloads is called what?",
+      "answer": "collection",
+      "explanation": "A Qdrant collection groups points/vectors/payloads under one configuration."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain QDRANT_URL, service DNS, collection/payload and named-volume persistence in one RAG dependency chain.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w6-m3-ollama-model-resources": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Ollama Service, Models & Resource Awareness?",
+      "options": [
+        "An Ollama process can be reachable while the required model is absent; model inventory and resource evidence are independent readiness checks.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "An Ollama process can be reachable while the required model is absent; model inventory and resource evidence are independent readiness checks.",
+      "explanation": "Ollama exposes a local model-serving API and maintains model artifacts in storage. Service process health, HTTP reachability and model inventory are separate conditions. Inference resource demand depends on model/runtime/hardware and must be measured against local baseline rather than assumed."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "terminal-output: tags/logs/stats/volume",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "terminal-output: tags/logs/stats/volume",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Call the model-list endpoint and compare exact required model name to frozen environment/manifest before modifying RAG code.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Call the model-list endpoint and compare exact required model name to frozen environment/manifest before modifying RAG code.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Ollama endpoint commonly used to list locally available models is what path?",
+      "answer": "/api/tags",
+      "explanation": "The /api/tags endpoint returns model inventory metadata for an Ollama service."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain Ollama URL/model/storage/resource chain and why health does not prove required model is usable.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w6-m4-rag-service-env-health": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất RAG Service Configuration, Health & Dependency Contract?",
+      "options": [
+        "RAG configuration must make Qdrant/Ollama URLs, collection/model and readiness observable; container localhost never reaches peer services.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "RAG configuration must make Qdrant/Ollama URLs, collection/model and readiness observable; container localhost never reaches peer services.",
+      "explanation": "A RAG service composes dependent endpoints and application configuration. Its health/readiness semantics should be explicit: process liveness, configuration validity and dependency connectivity may be separate. Structured errors/logs enable routing issues to infrastructure versus functional RAG logic."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: redacted RAG dependency env matrix",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: redacted RAG dependency env matrix",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "From RAG context resolve dependencies and compare its resolved env contract before changing health/prompt code.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "From RAG context resolve dependencies and compare its resolved env contract before changing health/prompt code.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Container hostname for a peer service should normally be what in Compose?",
+      "answer": "service name",
+      "explanation": "Compose embedded DNS resolves a peer service by its declared service name on the shared network."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain a RAG 500 test order from RAG process through Qdrant/Ollama to SV3 algorithm handoff.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w6-m5-rag-infra-incident-handoff": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất RAG Infrastructure Incident & SV3 Handoff?",
+      "options": [
+        "RAG infra triage proves service/network/env/collection/model/resource first, then hands prompt/retrieval/reasoning quality to SV3 with evidence.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "RAG infra triage proves service/network/env/collection/model/resource first, then hands prompt/retrieval/reasoning quality to SV3 with evidence.",
+      "explanation": "Dependency-chain incident analysis isolates liveness, network, configuration, persistent state and resource faults with discriminating tests. Escalation quality is determined by reproducible symptom, collected evidence, eliminated infrastructure hypotheses and clear expected/actual behavior."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "incident-report: full nine-step RAG fault",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "incident-report: full nine-step RAG fault",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Collect RAG/Qdrant/Ollama state, logs, URLs/collections/tags and resources in one ordered evidence snapshot.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Collect RAG/Qdrant/Ollama state, logs, URLs/collections/tags and resources in one ordered evidence snapshot.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "If all infrastructure checks pass but retrieved chunks are irrelevant, primary owner is who?",
+      "answer": "SV3",
+      "explanation": "Retrieval/chunk/prompt/answer-quality logic is SV3 ownership after SV1 validates infrastructure."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain the RAG incident decision tree and write the boundary between SV1 infra fix and SV3 functional handoff.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w6-m6-corpus-safety-rag-evaluation": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Corpus Safety, RAG Evaluation & Infrastructure Release Evidence?",
+      "options": [
+        "RAG corpus safety requires provenance, version/checksum, access policy and exclusion of secrets/PII; evaluation distinguishes infrastructure evidence from retrieval-quality ownership.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "RAG corpus safety requires provenance, version/checksum, access policy and exclusion of secrets/PII; evaluation distinguishes infrastructure evidence from retrieval-quality ownership.",
+      "explanation": "Corpus governance maintains provenance, version, integrity and access constraints for ingested source material. Evaluation sets measure expected behavior against controlled questions/sources. Retrieved text is data, not trusted executable instruction, which constrains prompt-injection and secret-exfiltration risks."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: corpus manifest/eval set reference",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: corpus manifest/eval set reference",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Review approved manifest and exclusion rules before ingestion, then confirm collection/model/resource state after a controlled run.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Review approved manifest and exclusion rules before ingestion, then confirm collection/model/resource state after a controlled run.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Data retrieved from a corpus should be treated as what, not an instruction?",
+      "answer": "untrusted data",
+      "explanation": "Retrieved content can contain malicious or irrelevant text and must not override system/tool security rules."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain corpus manifest, safety review, evaluation set and the handoff boundary between SV1 infrastructure and SV3 answer quality.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ]
+}

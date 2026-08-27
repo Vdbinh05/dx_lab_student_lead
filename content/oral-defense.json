@@ -1,0 +1,170 @@
+[
+  {
+    "id": "oral-architecture-01",
+    "group": "H-P-D-I",
+    "prompt": "Giải thích H-P-D-I của DX-Lab và ranh giới ownership của SV1, SV2, SV3.",
+    "keyPoints": ["H=identity/Keycloak, P=business/API/data/workflow, D=dashboard/Portal, I=AI/RAG/Agent", "SV1 coordinate infra, identity, integration, release; SV2 owns business/API/data/n8n; SV3 owns Portal/AI/UX", "Nêu contract và handoff thay vì giành module"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-architecture-02",
+    "group": "Architecture",
+    "prompt": "Phân biệt container running, healthy và functional trong một user flow.",
+    "keyPoints": ["running chỉ process/container đang chạy", "healthy dựa healthcheck đã định nghĩa", "functional phải chứng minh dependency và use case thật", "nêu evidence gồm ps, health, logs và smoke flow"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-architecture-03",
+    "group": "Change Request",
+    "prompt": "Khi Backend đổi port, hãy mô tả Change → impact → PR → regression → docs cho toàn hệ thống.",
+    "keyPoints": ["inventory/Compose/env/proxy/health/caller/documentation đều được impact analysis", "PR có evidence và owner review", "regression gồm config/static/API/workflow/E2E phù hợp", "không đổi âm thầm sau configuration freeze"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-identity-01",
+    "group": "Identity",
+    "prompt": "Phân biệt 401 và 403, đồng thời nêu evidence tối thiểu để debug mỗi trường hợp.",
+    "keyPoints": ["401 là thiếu/invalid authentication; 403 là authenticated nhưng không được authorize", "kiểm tra request/token/issuer/audience/expiry cho 401", "kiểm tra role/claim/policy/resource mapping cho 403", "không tắt auth để che lỗi"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-identity-02",
+    "group": "Security",
+    "prompt": "Vì sao secret không được vào Git, issue, docs, screenshot hoặc export workflow?",
+    "keyPoints": ["secret exposure mở rộng blast radius và không thể thu hồi hoàn toàn sau commit/chia sẻ", "dùng .env.example chỉ với tên/placeholder, runtime protected secret cho giá trị thật", "redact evidence và mô tả cách rotate/verify thay vì chép value"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-identity-03",
+    "group": "Security",
+    "prompt": "Giải thích nguyên tắc least privilege cho Agent tool authorization và HITL.",
+    "keyPoints": ["tool scope tối thiểu theo role/action", "Agent chỉ DRAFT/PENDING, không tự approve hoặc bypass RBAC", "sensitive action cần human approval và audit trace", "red-team phải chứng minh zero bypass/secret exposure"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-operations-01",
+    "group": "Troubleshooting",
+    "prompt": "Nếu dịch vụ container không truy cập được, hãy trình bày troubleshooting protocol của SV1.",
+    "keyPoints": ["SYMPTOM → EVIDENCE → HYPOTHESIS → TEST → RESULT → ROOT CAUSE → FIX → VERIFICATION → REGRESSION", "check process/listen/network/hostname/health/log/caller theo evidence", "không restart hoặc xóa volume trước khi thu evidence"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-operations-02",
+    "group": "Docker",
+    "prompt": "Vì sao localhost trong host khác với localhost trong container?",
+    "keyPoints": ["mỗi network namespace có loopback riêng", "caller trong container dùng service DNS/internal port phù hợp thay vì host localhost", "verify bằng Compose config, exec/curl/DNS/log evidence"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-operations-03",
+    "group": "Docker",
+    "prompt": "Một health endpoint nên trả lời câu hỏi gì, và không được thay thế bởi điều gì?",
+    "keyPoints": ["trạng thái service/dependency theo contract", "phải có source-of-truth path/port và expected result", "không thay thế full functional smoke/E2E", "không leak secret hoặc chi tiết nhạy cảm"],
+    "sourceType": "KIEN_THUC_MO_RONG"
+  },
+  {
+    "id": "oral-workflow-01",
+    "group": "Integration",
+    "prompt": "Giải thích retry và idempotency trong một workflow approval.",
+    "keyPoints": ["retry có thể lặp request do failure transient", "idempotency key/dedup giúp cùng intent không tạo duplicate write", "side effect cần state/audit/verification", "SV1 verify contract/runtime; SV2 owns business workflow logic"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-workflow-02",
+    "group": "Integration",
+    "prompt": "Một handoff từ SV1 sang SV2 hoặc SV3 cần có những trường nào?",
+    "keyPoints": ["Symptom, Evidence, Infra/Auth/DB checks, Reproduction, Likely layer, Owner, Expected, Actual", "include timestamp/correlation when available", "nêu boundary và next verification/regression", "không gửi kết luận không có evidence"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-workflow-03",
+    "group": "Change Request",
+    "prompt": "Vì sao config/interface sau freeze phải đi qua Issue → impact analysis → PR → regression → docs update?",
+    "keyPoints": ["giữ runtime contract traceable/auditable", "đo blast radius trước change", "PR/review/evidence giảm silent drift", "docs/config/tests đồng bộ và rollback được"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-recovery-01",
+    "group": "Release",
+    "prompt": "Backup khác restore drill như thế nào?",
+    "keyPoints": ["backup chỉ là artifact được tạo/lưu", "restore drill chứng minh artifact có thể phục hồi đúng nơi đúng cách", "verify data/application flow sau restore", "record RPO/RTO, owner, location/retention và secret protection"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-recovery-02",
+    "group": "Troubleshooting",
+    "prompt": "Khi nào không được xóa volume trong lúc debug?",
+    "keyPoints": ["không dùng destructive cleanup trước evidence/root cause", "volume có persistent state và xóa có thể làm mất recovery evidence", "isolate controlled disposable test only with explicit backup/rollback", "choose minimum fix then regression"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-recovery-03",
+    "group": "Release",
+    "prompt": "Fresh-machine pass cần chứng minh những điều gì ngoài việc docker compose up thành công?",
+    "keyPoints": ["clean clone/env/Compose/import/migration/seed/bootstrap/smoke/E2E/restart/restore", "không source/path edit thủ công", "ready ≤15 phút excluding first model pull và ≥2 machines", "docs/config evidence is portable"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-ai-01",
+    "group": "AI Infra",
+    "prompt": "Nêu ranh giới SV1 với Qdrant, Ollama, RAG và Agent.",
+    "keyPoints": ["SV1 handles service/container/network/resource/health/security integration", "SV3 owns RAG/Agent reasoning, Portal/UX implementation", "SV1 evidence checks model/collection/endpoint/resource without taking AI logic", "handoff defects with reproducible facts"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-ai-02",
+    "group": "AI Infra",
+    "prompt": "Nếu embedding model mismatch xuất hiện, đâu là evidence và blast radius cần kiểm tra?",
+    "keyPoints": ["compare configured model/vector dimension/collection contract", "inspect service health/logs/env and safe test query", "blast radius includes ingestion/retrieval/index compatibility", "do not delete collection before backup/evidence"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-ai-03",
+    "group": "AI Infra",
+    "prompt": "Vì sao corpus RAG phải loại secret và PII?",
+    "keyPoints": ["retrieval can expose indexed content broadly", "least privilege and retention apply to corpus", "sanitize/redact before ingestion and test access boundary", "record governance rather than relying on hidden policy"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-release-01",
+    "group": "Release",
+    "prompt": "Một v0.9 release package hợp lệ gồm gì và điều gì chặn release?",
+    "keyPoints": ["tag, CHANGELOG, release notes, checksum, safe exports, docs version, known issues", "quality gates and internal acceptance ≥80/100", "zero Critical and explicit rollback target", "source/artifact integrity must match"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-release-02",
+    "group": "Release",
+    "prompt": "Khi unknown incident xuất hiện ngay trước demo, SV1 quyết định GO/NO-GO như thế nào?",
+    "keyPoints": ["capture evidence and form falsifiable hypothesis before change", "classify severity/blast radius/owner and run minimal test", "Critical or failed hard gate freezes release", "only release after verification/regression and documented decision"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-release-03",
+    "group": "Release",
+    "prompt": "Tại sao checksum không đủ để chứng minh release functional?",
+    "keyPoints": ["checksum proves artifact integrity only", "functional readiness needs deployment/health/must flows/regression", "security/config/docs/fresh-machine and acceptance gates remain separate", "release decision combines evidence"],
+    "sourceType": "KIEN_THUC_MO_RONG"
+  },
+  {
+    "id": "oral-leadership-01",
+    "group": "Change Request",
+    "prompt": "SV1 biến một requirement mơ hồ thành task team-ready như thế nào?",
+    "keyPoints": ["issue includes priority, owner, dependency, acceptance, evidence and DoD", "blockers have evidence and escalation/decision record", "respect SV2/SV3 ownership", "review outcome feeds release readiness"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-leadership-02",
+    "group": "Integration",
+    "prompt": "Evidence nào làm team readiness mạnh hơn một lời xác nhận bằng miệng?",
+    "keyPoints": ["linked issue/PR/review/test output/demo/incident report", "source-of-truth docs/config and owner sign-off", "explicit expected/actual and regression result", "dated decision/known risk/next action"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  },
+  {
+    "id": "oral-leadership-03",
+    "group": "Change Request",
+    "prompt": "Khi nào SV1 phải freeze release thay vì cố sửa nhanh?",
+    "keyPoints": ["open Critical, failed hard gate, unknown impact or unverified root cause", "missing P0 configuration/docs/fresh-machine evidence", "fix would cross owner boundary or lacks review", "freeze, classify, assign owner and rerun regression after minimum fix"],
+    "sourceType": "THEO_KE_HOACH_CO"
+  }
+]

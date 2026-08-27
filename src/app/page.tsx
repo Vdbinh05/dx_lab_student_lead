@@ -1,69 +1,141 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ShieldAlert } from "lucide-react";
+import { getDashboardData } from "@/lib/app-data";
+import {
+  BlockerCard,
+  MetricCard,
+  PageHeader,
+  ProgressBar,
+  SkillLevelBadge,
+} from "@/components/ui";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+const coreSkills = [
+  ["linux", "Linux"],
+  ["networking", "Networking"],
+  ["git", "Git / Open Source"],
+  ["docker", "Docker / Compose"],
+  ["keycloak", "Identity / Keycloak"],
+  ["system-integration", "System Integration"],
+] as const;
+
+export default async function Dashboard() {
+  const data = await getDashboardData();
+  const overall = Math.round((data.passed.length / data.missions.length) * 100);
+  const levelMap = new Map(data.skills.map((item) => [item.id, item]));
+  const currentDefinition = data.currentWeekDefinition;
+  const blockers = [
+    ...(data.nextMission ? [data.nextMission.title + " chưa PASS"] : []),
+    ...(!data.bossFightPassed && currentDefinition
+      ? ["Week " + data.currentWeek + " Boss Fight chưa CLEAN PASS"]
+      : []),
+    ...(data.evidenceCount === 0 ? ["Chưa có evidence thực tế"] : []),
+    ...data.readiness.p0Blockers,
+  ];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="mx-auto max-w-[1450px]">
+      <PageHeader
+        eyebrow="Personal technical training operating system"
+        title="DX-Lab SV1 Training OS"
+        description="Current position, hard blockers, and the next technical action across the complete 8-week roadmap."
+        action={
+          <Link href="/today" className="btn-primary">
+            Continue <ArrowRight size={16} />
+          </Link>
+        }
+      />
+      <section className="card mb-6 grid gap-5 p-6 lg:grid-cols-[1.3fr_.7fr]">
+        <div>
+          <div className="eyebrow">Current position</div>
+          <h2 className="mt-2 text-2xl font-black text-white">
+            Week {data.currentWeek} · {currentDefinition?.title ?? "Roadmap complete"}
+          </h2>
+          <p className="mt-2 text-sm text-[#8f9dac]">
+            {data.nextMission
+              ? "Mission " +
+                String(data.nextMission.order).padStart(2, "0") +
+                " / " +
+                currentDefinition?.missionCount +
+                " · " +
+                data.nextMission.title
+              : "Mission gates complete for this week · open Weekly Review"}
           </p>
+          <div className="mt-5">
+            <ProgressBar value={overall} label="Overall roadmap mission progress" />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="border-l border-[#273340] bg-[#0d131b] p-5">
+          <div className="text-[10px] font-bold uppercase text-[#758291]">Final readiness</div>
+          <div className="mt-3 font-mono text-2xl font-black text-[#65ddd7]">
+            {data.readiness.passedCount}/10
+          </div>
+          <div className="mt-2 text-sm font-bold text-white">{data.readiness.status}</div>
+          <Link href="/readiness" className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#65ddd7]">
+            Inspect dimensions <ArrowRight size={13} />
+          </Link>
         </div>
-      </main>
+      </section>
+      <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <MetricCard label="Missions" value={data.passed.length + "/" + data.missions.length} detail="deterministic PASS" />
+        <MetricCard label="Evidence" value={data.evidenceCount} detail="saved artifacts" tone="lime" />
+        <MetricCard label="Quiz avg" value={data.quizAverage + "%"} detail="all attempts" />
+        <MetricCard label="Week gates" value={data.weeklyProgress.length + "/8"} detail="committed" />
+        <MetricCard label="Boss Fights" value={data.cleanBossFightWeeks.length + "/8"} detail="clean PASS" tone="amber" />
+        <MetricCard label="Current week" value={data.currentWeek + "/8"} detail="unlocked progression" />
+      </section>
+      <div className="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
+        <section className="card p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="eyebrow">Core readiness</div>
+              <h2 className="mt-1 text-lg font-bold text-white">SV1 competency baseline</h2>
+            </div>
+            <Link href="/skills" className="text-xs font-bold text-[#62d9d3]">Open skill matrix</Link>
+          </div>
+          <div className="mt-5 divide-y divide-[#252f3a]">
+            {coreSkills.map(([id, label]) => {
+              const skill = levelMap.get(id);
+              return (
+                <div key={id} className="flex flex-col justify-between gap-3 py-3 sm:flex-row sm:items-center">
+                  <div>
+                    <div className="text-sm font-semibold text-[#dbe2e9]">{label}</div>
+                    <div className="mt-1 text-xs text-[#758291]">
+                      L{skill?.currentLevel ?? 0} → Target L{skill?.targetLevel ?? 4}
+                    </div>
+                  </div>
+                  <SkillLevelBadge current={skill?.currentLevel ?? 0} target={skill?.targetLevel ?? 4} />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+        <section className="card p-6">
+          <div className="flex items-center gap-2">
+            <ShieldAlert size={17} className="text-[#efb660]" />
+            <div>
+              <div className="eyebrow !text-[#eeb760]">Current hard blockers</div>
+              <h2 className="mt-1 text-lg font-bold text-white">Cannot be skipped</h2>
+            </div>
+          </div>
+          <div className="mt-5 space-y-3">
+            {blockers.length ? (
+              [...new Set(blockers)].map((item) => <BlockerCard key={item}>{item}</BlockerCard>)
+            ) : (
+              <div className="border border-[#3f6938] bg-[#152515] p-4 text-sm text-[#b8e774]">
+                No active blocker. Continue with the current weekly review.
+              </div>
+            )}
+          </div>
+          <Link
+            href={data.nextMission ? "/today" : "/weeks/" + data.currentWeek + "/review"}
+            className="btn-primary mt-5 w-full"
+          >
+            {data.nextMission ? "Continue Today" : "Open Weekly Review"} <ArrowRight size={16} />
+          </Link>
+        </section>
+      </div>
     </div>
   );
 }

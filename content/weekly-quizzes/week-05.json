@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w5-m1-service-health-operations-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Operations: Service Health Matrix, Logs & Resources?",
+    "options": [
+      "Running, healthy and functional are distinct operational observations; a service matrix guides evidence collection before restart.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Running, healthy and functional are distinct operational observations; a service matrix guides evidence collection before restart.",
+    "explanation": "Operational observability combines service lifecycle state, healthcheck status, structured/relevant logs, resource utilization, listening ports and dependency topology. Baselines contextualize anomalies and support evidence-first incident response without requiring enterprise monitoring tooling."
+  },
+  {
+    "id": "w5-m1-service-health-operations-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "log: service health matrix snapshot",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "log: service health matrix snapshot",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w5-m1-service-health-operations-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Capture compose ps, the first relevant service log, port/listener and resource snapshot before changing state.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Capture compose ps, the first relevant service log, port/listener and resource snapshot before changing state.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w5-m1-service-health-operations-q4",
+    "type": "short-answer",
+    "prompt": "Which command gives one-time Docker CPU/RAM usage snapshot?",
+    "answer": "docker stats --no-stream",
+    "explanation": "docker stats --no-stream reports a single non-continuous resource usage snapshot."
+  },
+  {
+    "id": "w5-m1-service-health-operations-q5",
+    "type": "self-explanation",
+    "prompt": "Explain how a Service Health Matrix turns a browser symptom into ordered evidence rather than random restarts.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w5-m2-metabase-readonly-bi-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Metabase, Read-only Reporting & KPI Boundary?",
+    "options": [
+      "Metabase should use a least-privilege read-only reporting account; dashboard numbers require source/query validation.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Metabase should use a least-privilege read-only reporting account; dashboard numbers require source/query validation.",
+    "explanation": "Business-intelligence tooling queries a source database through a least-privilege reporting principal. A dashboard visualization derives values from saved queries/filters; correctness requires validating query semantics, access permissions and source data rather than trusting chart rendering."
+  },
+  {
+    "id": "w5-m2-metabase-readonly-bi-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: read-only SELECT/denied-write proof",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: read-only SELECT/denied-write proof",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w5-m2-metabase-readonly-bi-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Verify reporting identity and a simple SELECT/denied-write boundary before debugging dashboard formulas.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Verify reporting identity and a simple SELECT/denied-write boundary before debugging dashboard formulas.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w5-m2-metabase-readonly-bi-q4",
+    "type": "short-answer",
+    "prompt": "Database privilege required by a reporting-only dashboard is what?",
+    "answer": "SELECT",
+    "explanation": "Read-only reporting needs SELECT privileges, not write/owner privileges."
+  },
+  {
+    "id": "w5-m2-metabase-readonly-bi-q5",
+    "type": "self-explanation",
+    "prompt": "Explain Postgres→reporting user→Metabase→KPI and distinguish dashboard access safety from KPI correctness.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w5-m3-kpi-data-validation-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất KPI Data Validation & Reporting Incident Triage?",
+    "options": [
+      "Dashboard correctness must be traced from a known source record through query/filter/aggregation to displayed value.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Dashboard correctness must be traced from a known source record through query/filter/aggregation to displayed value.",
+    "explanation": "KPI correctness is a lineage problem: operational events are persisted in source tables, transformed by explicit query/filter/aggregation rules, and rendered in a BI layer. Validation compares controlled source records and independent aggregate queries against dashboard results across time/status boundaries."
+  },
+  {
+    "id": "w5-m3-kpi-data-validation-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: source-row/query/dashboard comparison",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: source-row/query/dashboard comparison",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w5-m3-kpi-data-validation-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Find a known business ID in source data and compare its status/time/filter inclusion before editing a KPI query.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Find a known business ID in source data and compare its status/time/filter inclusion before editing a KPI query.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w5-m3-kpi-data-validation-q4",
+    "type": "short-answer",
+    "prompt": "SQL operation that groups records by status is called what?",
+    "answer": "GROUP BY",
+    "explanation": "GROUP BY partitions result rows into groups for aggregate calculation."
+  },
+  {
+    "id": "w5-m3-kpi-data-validation-q5",
+    "type": "self-explanation",
+    "prompt": "Explain source row→SQL filter/aggregate→dashboard lineage and why a healthy chart can still be wrong.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w5-m4-backup-checksum-protection-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Database Backup, Checksum & Protection?",
+    "options": [
+      "A backup artifact needs checksum and protection, but recoverability is proven only by a separate-target restore plus smoke/data verification.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "A backup artifact needs checksum and protection, but recoverability is proven only by a separate-target restore plus smoke/data verification.",
+    "explanation": "Logical PostgreSQL backup serializes database schema/data through pg_dump. A cryptographic checksum detects accidental artifact corruption/change but does not establish recoverability by itself. Backup policy defines location, permissions, retention, restore target and verification drill."
+  },
+  {
+    "id": "w5-m4-backup-checksum-protection-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: sanitized pg_dump/hash/size",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: sanitized pg_dump/hash/size",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w5-m4-backup-checksum-protection-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Check pg_dump exit status, non-zero artifact size and checksum before treating a backup as usable.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Check pg_dump exit status, non-zero artifact size and checksum before treating a backup as usable.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w5-m4-backup-checksum-protection-q4",
+    "type": "short-answer",
+    "prompt": "PostgreSQL logical backup command is what?",
+    "answer": "pg_dump",
+    "explanation": "pg_dump exports PostgreSQL database contents in selectable logical formats."
+  },
+  {
+    "id": "w5-m4-backup-checksum-protection-q5",
+    "type": "self-explanation",
+    "prompt": "Explain safe backup flow including location, checksum, access/retention and why no active DB overwrite occurs.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

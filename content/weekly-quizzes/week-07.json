@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w7-m1-agent-tool-architecture-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Agent, Tool Calling & Security Architecture?",
+    "options": [
+      "Agent output must flow through allowlisted schema validation and Backend authorization; the model is never a security principal with unrestricted power.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Agent output must flow through allowlisted schema validation and Backend authorization; the model is never a security principal with unrestricted power.",
+    "explanation": "Tool-mediated agent architecture constrains model output to declared schemas and server-side operations. Defense in depth combines tool allowlists, argument validation, service/user authentication, Backend authorization, least privilege, audited outcomes and human approval for sensitive state transitions."
+  },
+  {
+    "id": "w7-m1-agent-tool-architecture-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "explanation: Agent security chain diagram",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "explanation: Agent security chain diagram",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w7-m1-agent-tool-architecture-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Inspect tool allowlist/schema and Backend endpoint authorization before testing any model-generated action.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Inspect tool allowlist/schema and Backend endpoint authorization before testing any model-generated action.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w7-m1-agent-tool-architecture-q4",
+    "type": "short-answer",
+    "prompt": "Which layer is the real policy enforcement point for an Agent tool action?",
+    "answer": "Backend",
+    "explanation": "Backend authentication/authorization and business policy must enforce the action independently of Agent output."
+  },
+  {
+    "id": "w7-m1-agent-tool-architecture-q5",
+    "type": "self-explanation",
+    "prompt": "Explain Agent→tool schema→args validation→Backend auth/RBAC→DRAFT/PENDING→HITL chain.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w7-m2-read-tool-schema-validation-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Read Tools: Schema, Limits, Auth & Audit?",
+    "options": [
+      "A read tool is safe only when Backend revalidates constrained arguments, enforces role/scope, bounds output and records sanitized audit.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "A read tool is safe only when Backend revalidates constrained arguments, enforces role/scope, bounds output and records sanitized audit.",
+    "explanation": "A secure read tool exposes a constrained API operation with an explicit input schema, server-side revalidation, authorization policy, pagination/row limits and data-minimized response. Audit logs actor, tool, sanitized args, result summary, correlation and latency where useful."
+  },
+  {
+    "id": "w7-m2-read-tool-schema-validation-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: invalid/missing/allowed/bounded matrix",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: invalid/missing/allowed/bounded matrix",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w7-m2-read-tool-schema-validation-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Send missing/invalid/out-of-range arguments to Backend and confirm it denies/bounds them before a model call is considered successful.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Send missing/invalid/out-of-range arguments to Backend and confirm it denies/bounds them before a model call is considered successful.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w7-m2-read-tool-schema-validation-q4",
+    "type": "short-answer",
+    "prompt": "What control prevents an Agent read tool from returning an unbounded table?",
+    "answer": "row limit",
+    "explanation": "A server-enforced row limit constrains response size and data exposure."
+  },
+  {
+    "id": "w7-m2-read-tool-schema-validation-q5",
+    "type": "self-explanation",
+    "prompt": "Explain secure read-tool schema, Backend validation, role/scope, row limit and audit chain.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w7-m3-write-tool-pending-hitl-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Write Tools: Pending-only State & HITL?",
+    "options": [
+      "Agent write tools may create only server-forced AI-sourced DRAFT/PENDING proposals; a separate Manager-governed HITL transition handles approval.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Agent write tools may create only server-forced AI-sourced DRAFT/PENDING proposals; a separate Manager-governed HITL transition handles approval.",
+    "explanation": "Controlled write tools create proposed domain state under server-enforced invariants. Backend derives immutable metadata and allowed state independent of client/Agent request, authorizes actor, validates arguments, persists audit and requires a separate human-authorized transition for approval."
+  },
+  {
+    "id": "w7-m3-write-tool-pending-hitl-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: pending/denied/manager matrix",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: pending/denied/manager matrix",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w7-m3-write-tool-pending-hitl-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Attempt to submit final approved state through create path and verify Backend ignores/rejects it before testing workflow continuation.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Attempt to submit final approved state through create path and verify Backend ignores/rejects it before testing workflow continuation.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w7-m3-write-tool-pending-hitl-q4",
+    "type": "short-answer",
+    "prompt": "Initial state a secure Agent write must enforce is what?",
+    "answer": "PENDING",
+    "explanation": "Pending state preserves the human approval boundary for an Agent-created proposal."
+  },
+  {
+    "id": "w7-m3-write-tool-pending-hitl-q5",
+    "type": "self-explanation",
+    "prompt": "Explain Agent write schema through server-forced pending state to Manager HITL and workflow continuation.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w7-m4-agent-service-auth-rbac-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Agent Service Authentication, RBAC & Permission Boundary?",
+    "options": [
+      "Internal Agent service connectivity is not authorization: Backend validates service/auth context and applies user-role tool permission separately.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Internal Agent service connectivity is not authorization: Backend validates service/auth context and applies user-role tool permission separately.",
+    "explanation": "Service-to-service authentication establishes workload identity, while end-user authorization context determines delegated permissions. Backend policy validates issuer/audience/credentials and enforces role/resource actions. 401 reflects invalid authentication; 403 reflects authenticated but unauthorized action."
+  },
+  {
+    "id": "w7-m4-agent-service-auth-rbac-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: 401/403/allowed tool matrix",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: 401/403/allowed tool matrix",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w7-m4-agent-service-auth-rbac-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Classify request as no/invalid auth 401 versus valid wrong-role 403 before altering any role or secret configuration.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Classify request as no/invalid auth 401 versus valid wrong-role 403 before altering any role or secret configuration.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w7-m4-agent-service-auth-rbac-q4",
+    "type": "short-answer",
+    "prompt": "Status for a valid but unauthorized user/tool action is what?",
+    "answer": "403",
+    "explanation": "403 is the expected response for authentication that succeeds but lacks required authorization."
+  },
+  {
+    "id": "w7-m4-agent-service-auth-rbac-q5",
+    "type": "self-explanation",
+    "prompt": "Explain service identity, user actor context and Backend RBAC for an Agent tool, including 401/403 test matrix.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

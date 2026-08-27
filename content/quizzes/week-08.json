@@ -1,0 +1,387 @@
+{
+  "w8-m1-regression-quality-gates": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Regression Strategy & Quality Gates?",
+      "options": [
+        "Regression runs deterministic low-level checks before API/workflow/E2E, and every blocking failure retains an owner and evidence.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Regression runs deterministic low-level checks before API/workflow/E2E, and every blocking failure retains an owner and evidence.",
+      "explanation": "Regression testing re-executes validated checks after change to detect unintended behavior. Layered test ordering reduces diagnosis cost and aligns failure ownership: static/source, unit, API contract, workflow integration and user-facing E2E verify progressively wider surfaces."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "test-result: regression matrix with timing/owner",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "test-result: regression matrix with timing/owner",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Run the narrowest relevant static/config test before altering runtime or launching browser flows.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Run the narrowest relevant static/config test before altering runtime or launching browser flows.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Which command validates a resolved Docker Compose model without starting it?",
+      "answer": "docker compose config",
+      "explanation": "docker compose config parses and renders the resolved Compose model without running services."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain reset/seed→static→unit→API→workflow→E2E and assign common failure ownership to SV1/SV2/SV3.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m2-configuration-freeze-change-impact": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Configuration Freeze & Change Impact Analysis?",
+      "options": [
+        "Configuration freeze converts runtime assumptions into versioned contracts; later changes require impact analysis, regression and docs updates.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Configuration freeze converts runtime assumptions into versioned contracts; later changes require impact analysis, regression and docs updates.",
+      "explanation": "Configuration management establishes versioned, auditable runtime contracts. Change impact analysis identifies direct service changes, upstream callers, downstream dependencies, environment/auth/test/documentation/release consequences before modification, enabling controlled regression and rollback planning."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: configuration-freeze inventory/TBD register",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: configuration-freeze inventory/TBD register",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Compare the proposed change against service inventory, resolved Compose and every listed caller/dependency before editing.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Compare the proposed change against service inventory, resolved Compose and every listed caller/dependency before editing.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "After configuration freeze, which artifact must precede a port/role/model change?",
+      "answer": "impact analysis",
+      "explanation": "Impact analysis identifies affected services, callers, tests and documentation before a release configuration change."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain service inventory fields and run a Backend-port or OLLAMA_MODEL impact analysis from change through regression/docs.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m3-fresh-machine-installation": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Fresh-machine Installation & Reproducible Bootstrap?",
+      "options": [
+        "Fresh-machine readiness proves documented source/config/bootstrap can create the runtime on an independent environment without hidden state or source edits.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Fresh-machine readiness proves documented source/config/bootstrap can create the runtime on an independent environment without hidden state or source edits.",
+      "explanation": "Reproducibility verifies that versioned source, configuration contracts and documented bootstrap commands create a functional runtime from an independent environment. It exposes hidden state, environment drift, unpinned dependencies and undocumented imports through objective readiness timing and smoke results."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "test-result: fresh-machine checklist/timing/smoke report",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "test-result: fresh-machine checklist/timing/smoke report",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Follow .env.example and Compose config exactly from a clean clone, recording the first missing/ambiguous prerequisite rather than improvising.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Follow .env.example and Compose config exactly from a clean clone, recording the first missing/ambiguous prerequisite rather than improvising.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "What kind of path must not be required for a fresh-machine setup?",
+      "answer": "personal absolute path",
+      "explanation": "A setup depending on an individual's absolute path is not portable or reproducible."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain clean-machine clone→env→Compose→migration/seed/import→AI bootstrap→smoke and the evidence proving no hidden state.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m4-release-package-integrity-rollback": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Release Package, Integrity & Rollback?",
+      "options": [
+        "A release is an immutable validated package with traceable source, integrity evidence, documented exports and an explicit rollback decision—not merely a green build.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "A release is an immutable validated package with traceable source, integrity evidence, documented exports and an explicit rollback decision—not merely a green build.",
+      "explanation": "Release engineering creates an immutable, traceable deployment candidate. Version tags connect source to artifacts; checksums establish artifact integrity; release notes and exports capture operational state; an explicit rollback plan bounds impact when quality/security gates fail."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "config: release manifest/tag/checksum/exports list",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "config: release manifest/tag/checksum/exports list",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Verify the exact candidate revision, package manifest and checksum before promotion; stop if any item does not match.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Verify the exact candidate revision, package manifest and checksum before promotion; stop if any item does not match.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Which artifact-integrity value should accompany a release file?",
+      "answer": "SHA-256 checksum",
+      "explanation": "A SHA-256 checksum lets a recipient verify that the artifact matches the released file."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain how tag, CHANGELOG, notes, checksum, exports, acceptance and rollback combine into a safe v0.9 release decision.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m5-documentation-handoff-peer-verification": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Documentation Governance, Handoff & Peer Verification?",
+      "options": [
+        "Release documentation is verified by an independent reader, and every handoff preserves symptom, evidence, reproduction, likely layer, owner, expected and actual.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "Release documentation is verified by an independent reader, and every handoff preserves symptom, evidence, reproduction, likely layer, owner, expected and actual.",
+      "explanation": "Operational documentation is a versioned system contract. Peer verification tests whether instructions reproduce their claimed outcome independently. Structured handoff preserves observability and ownership boundaries, reducing duplicated diagnosis and undocumented knowledge."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "test-result: peer documentation verification matrix",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "test-result: peer documentation verification matrix",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Ask a non-author to follow the exact versioned command path and record the first mismatch before changing instructions.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Ask a non-author to follow the exact versioned command path and record the first mismatch before changing instructions.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "Which field is essential in a useful cross-team handoff besides the symptom?",
+      "answer": "reproduction steps",
+      "explanation": "Reproduction steps let the receiving owner independently observe and verify the reported behavior."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain how peer-tested docs and structured handoff protect release quality while preserving SV1/SV2/SV3 ownership boundaries.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m6-timed-demo-oral-defense": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Timed Demo, Oral Defense & Operations Q&A?",
+      "options": [
+        "A release demo proves real flow and operational reasoning under time; it is not a slide deck, and oral answers must state evidence, boundary and verification.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "A release demo proves real flow and operational reasoning under time; it is not a slide deck, and oral answers must state evidence, boundary and verification.",
+      "explanation": "Oral defense evaluates operational understanding under questioning: causal explanation, runtime evidence, security boundaries, incident method and release decisions. A timed demo verifies a reproducible user flow rather than a prepared static presentation."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "test-result: timed demo run and oral-defense score sheet",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "test-result: timed demo run and oral-defense score sheet",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Check live health/dependencies and use a time-boxed rehearsal before relying on a demo narrative.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Check live health/dependencies and use a time-boxed rehearsal before relying on a demo narrative.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "What is the roadmap target duration for the final demo?",
+      "answer": "8–12 minutes",
+      "explanation": "The final readiness checklist requires a timed 8–12 minute demo."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain a timed SV1 demo of H-P-D-I, health, SSO, audit/correlation and an incident response without crossing module-owner boundaries.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ],
+  "w8-m7-final-go-no-go-unknown-incident": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Phát biểu nào mô tả đúng nhất Final Go/No-Go, Team Readiness & Unknown Incident?",
+      "options": [
+        "A final GO decision requires evidence for must flows, hard gates and zero Critical risk; an unknown incident is handled through a falsifiable diagnostic protocol and may freeze release.",
+        "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+        "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+        "SV1 phải giành implementation ownership từ SV2/SV3"
+      ],
+      "answer": "A final GO decision requires evidence for must flows, hard gates and zero Critical risk; an unknown incident is handled through a falsifiable diagnostic protocol and may freeze release.",
+      "explanation": "A release readiness gate aggregates acceptance criteria, security and operational evidence, recovery capability and unresolved risk. Unknown-incident handling tests diagnostic method independently of a pre-labeled subsystem. Go/no-go is a documented decision with inputs, rationale, owner actions and regression exit criteria."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Evidence nào phù hợp nhất cho mission này?",
+      "options": [
+        "incident-report: W8 unknown-incident causal chain",
+        "Một câu nói 'em đã hiểu' không kèm output",
+        "Restart ngẫu nhiên cho tới khi hết lỗi",
+        "Ảnh chứa secret/token thật"
+      ],
+      "answer": "incident-report: W8 unknown-incident causal chain",
+      "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+      "options": [
+        "Capture current service/health/log evidence and state one falsifiable hypothesis before changing configuration or restarting.",
+        "Xóa volume để thử lại",
+        "Tắt validation/security",
+        "Đổi nhiều biến cùng lúc"
+      ],
+      "answer": "Capture current service/health/log evidence and state one falsifiable hypothesis before changing configuration or restarting.",
+      "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+    },
+    {
+      "id": "q4",
+      "type": "short-answer",
+      "prompt": "What must happen to release when a Critical defect is open?",
+      "answer": "freeze release",
+      "explanation": "The roadmap requires zero Critical defects; an open Critical issue is a no-go and freezes promotion."
+    },
+    {
+      "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Explain an evidence-based GO/NO-GO decision after an unknown incident, including team ownership, hard gates and regression exit criteria.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w4-m1-system-integration-contracts-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất System Integration Contracts & Ownership Map?",
+    "options": [
+      "An integration contract gives each service endpoint, dependency, auth, health, owner and change impact—not only an API URL.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "An integration contract gives each service endpoint, dependency, auth, health, owner and change impact—not only an API URL.",
+    "explanation": "An integration contract specifies producer/consumer responsibilities, transport endpoints, authentication/authorization, schemas/semantics, health/failure behavior, correlation and version/change impact. A system map makes runtime dependencies observable and creates deterministic handoff boundaries."
+  },
+  {
+    "id": "w4-m1-system-integration-contracts-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: service/integration matrix",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: service/integration matrix",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w4-m1-system-integration-contracts-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Compare the written contract with docker compose config, then test the first caller→callee edge in the actual network scope.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Compare the written contract with docker compose config, then test the first caller→callee edge in the actual network scope.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w4-m1-system-integration-contracts-q4",
+    "type": "short-answer",
+    "prompt": "SV1 must record what for every service besides hostname and port?",
+    "answer": "owner",
+    "explanation": "Ownership is essential for safe routing, acceptance and escalation of cross-service defects."
+  },
+  {
+    "id": "w4-m1-system-integration-contracts-q5",
+    "type": "self-explanation",
+    "prompt": "Explain the H-P-D-I map and name hostname/port/auth/health/log/owner for each arrow in a protected request.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w4-m2-n8n-workflow-foundations-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất n8n Workflow Foundations & Backend Boundary?",
+    "options": [
+      "n8n coordinates workflow but calls Backend APIs for domain logic and persistence, preserving business rules and audit boundaries.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "n8n coordinates workflow but calls Backend APIs for domain logic and persistence, preserving business rules and audit boundaries.",
+    "explanation": "A workflow automates stateful transitions through triggered nodes, conditions and actions. A webhook is an HTTP-triggered event endpoint. Integration should use a stable Backend API contract, with explicit idempotency/audit/authorization, rather than bypassing domain invariants through arbitrary database access."
+  },
+  {
+    "id": "w4-m2-n8n-workflow-foundations-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: redacted workflow contract/export reference",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: redacted workflow contract/export reference",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w4-m2-n8n-workflow-foundations-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Verify workflow activation and its exact API target from the n8n execution/config, then test the target in the n8n network scope.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Verify workflow activation and its exact API target from the n8n execution/config, then test the target in the n8n network scope.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w4-m2-n8n-workflow-foundations-q4",
+    "type": "short-answer",
+    "prompt": "Workflow should call which layer to apply business rules and persist domain data?",
+    "answer": "Backend API",
+    "explanation": "The Backend API preserves service-layer validation, authorization and database invariants."
+  },
+  {
+    "id": "w4-m2-n8n-workflow-foundations-q5",
+    "type": "self-explanation",
+    "prompt": "Explain trigger→condition→action→Backend API→Postgres and why direct DB workflow writes are unsafe.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w4-m3-webhook-proxy-cors-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Webhooks, Reverse Proxy, CORS & Browser-vs-curl?",
+    "options": [
+      "CORS is browser response-sharing policy; curl does not enforce it, and Backend authorization remains separate.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "CORS is browser response-sharing policy; curl does not enforce it, and Backend authorization remains separate.",
+    "explanation": "Cross-Origin Resource Sharing controls whether browser JavaScript may read a cross-origin response through response headers and preflight behavior. Reverse proxies route external paths to internal upstreams. Curl bypasses browser CORS enforcement, so curl success can help isolate—not disprove—a browser-origin issue."
+  },
+  {
+    "id": "w4-m3-webhook-proxy-cors-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: request/preflight headers/status",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: request/preflight headers/status",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w4-m3-webhook-proxy-cors-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Compare browser's exact URL/Origin/method with curl and the proxy upstream route, then inspect preflight response when applicable.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Compare browser's exact URL/Origin/method with curl and the proxy upstream route, then inspect preflight response when applicable.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w4-m3-webhook-proxy-cors-q4",
+    "type": "short-answer",
+    "prompt": "HTTP method browsers commonly use for CORS preflight is what?",
+    "answer": "OPTIONS",
+    "explanation": "Browsers send OPTIONS requests to determine whether a cross-origin operation is permitted."
+  },
+  {
+    "id": "w4-m3-webhook-proxy-cors-q5",
+    "type": "self-explanation",
+    "prompt": "Explain why a curl 200 cannot alone prove Portal browser flow works and draw public→proxy→internal request scope.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w4-m4-correlation-audit-trace-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Correlation IDs, Business IDs & Audit Trace?",
+    "options": [
+      "Correlation IDs trace a request, business IDs identify domain entities, and idempotency keys identify a write operation for retry safety.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Correlation IDs trace a request, business IDs identify domain entities, and idempotency keys identify a write operation for retry safety.",
+    "explanation": "Distributed request correlation propagates a unique request identifier across service boundaries. Business identifiers identify domain entities, while idempotency keys identify an operation instance. Structured audit logs record security/operational events with a data-minimization policy and enable causality reconstruction."
+  },
+  {
+    "id": "w4-m4-correlation-audit-trace-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "log: sanitized cross-service trace timeline",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "log: sanitized cross-service trace timeline",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w4-m4-correlation-audit-trace-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Search one safe correlation ID across proxy, Backend and workflow logs before any restart or broad query.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Search one safe correlation ID across proxy, Backend and workflow logs before any restart or broad query.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w4-m4-correlation-audit-trace-q4",
+    "type": "short-answer",
+    "prompt": "Identifier used to recognize a retried write as the same operation is what?",
+    "answer": "idempotency key",
+    "explanation": "An idempotency key allows a server to recognize a repeated request as the same operation."
+  },
+  {
+    "id": "w4-m4-correlation-audit-trace-q5",
+    "type": "self-explanation",
+    "prompt": "Explain correlation_id, business_id and idempotency_key with one multi-service order workflow trace.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

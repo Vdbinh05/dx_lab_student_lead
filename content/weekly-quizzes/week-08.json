@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w8-m1-regression-quality-gates-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Regression Strategy & Quality Gates?",
+    "options": [
+      "Regression runs deterministic low-level checks before API/workflow/E2E, and every blocking failure retains an owner and evidence.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Regression runs deterministic low-level checks before API/workflow/E2E, and every blocking failure retains an owner and evidence.",
+    "explanation": "Regression testing re-executes validated checks after change to detect unintended behavior. Layered test ordering reduces diagnosis cost and aligns failure ownership: static/source, unit, API contract, workflow integration and user-facing E2E verify progressively wider surfaces."
+  },
+  {
+    "id": "w8-m1-regression-quality-gates-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: regression matrix with timing/owner",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: regression matrix with timing/owner",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w8-m1-regression-quality-gates-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Run the narrowest relevant static/config test before altering runtime or launching browser flows.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Run the narrowest relevant static/config test before altering runtime or launching browser flows.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w8-m1-regression-quality-gates-q4",
+    "type": "short-answer",
+    "prompt": "Which command validates a resolved Docker Compose model without starting it?",
+    "answer": "docker compose config",
+    "explanation": "docker compose config parses and renders the resolved Compose model without running services."
+  },
+  {
+    "id": "w8-m1-regression-quality-gates-q5",
+    "type": "self-explanation",
+    "prompt": "Explain reset/seed→static→unit→API→workflow→E2E and assign common failure ownership to SV1/SV2/SV3.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w8-m2-configuration-freeze-change-impact-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Configuration Freeze & Change Impact Analysis?",
+    "options": [
+      "Configuration freeze converts runtime assumptions into versioned contracts; later changes require impact analysis, regression and docs updates.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Configuration freeze converts runtime assumptions into versioned contracts; later changes require impact analysis, regression and docs updates.",
+    "explanation": "Configuration management establishes versioned, auditable runtime contracts. Change impact analysis identifies direct service changes, upstream callers, downstream dependencies, environment/auth/test/documentation/release consequences before modification, enabling controlled regression and rollback planning."
+  },
+  {
+    "id": "w8-m2-configuration-freeze-change-impact-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: configuration-freeze inventory/TBD register",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: configuration-freeze inventory/TBD register",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w8-m2-configuration-freeze-change-impact-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Compare the proposed change against service inventory, resolved Compose and every listed caller/dependency before editing.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Compare the proposed change against service inventory, resolved Compose and every listed caller/dependency before editing.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w8-m2-configuration-freeze-change-impact-q4",
+    "type": "short-answer",
+    "prompt": "After configuration freeze, which artifact must precede a port/role/model change?",
+    "answer": "impact analysis",
+    "explanation": "Impact analysis identifies affected services, callers, tests and documentation before a release configuration change."
+  },
+  {
+    "id": "w8-m2-configuration-freeze-change-impact-q5",
+    "type": "self-explanation",
+    "prompt": "Explain service inventory fields and run a Backend-port or OLLAMA_MODEL impact analysis from change through regression/docs.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w8-m3-fresh-machine-installation-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Fresh-machine Installation & Reproducible Bootstrap?",
+    "options": [
+      "Fresh-machine readiness proves documented source/config/bootstrap can create the runtime on an independent environment without hidden state or source edits.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Fresh-machine readiness proves documented source/config/bootstrap can create the runtime on an independent environment without hidden state or source edits.",
+    "explanation": "Reproducibility verifies that versioned source, configuration contracts and documented bootstrap commands create a functional runtime from an independent environment. It exposes hidden state, environment drift, unpinned dependencies and undocumented imports through objective readiness timing and smoke results."
+  },
+  {
+    "id": "w8-m3-fresh-machine-installation-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "test-result: fresh-machine checklist/timing/smoke report",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "test-result: fresh-machine checklist/timing/smoke report",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w8-m3-fresh-machine-installation-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Follow .env.example and Compose config exactly from a clean clone, recording the first missing/ambiguous prerequisite rather than improvising.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Follow .env.example and Compose config exactly from a clean clone, recording the first missing/ambiguous prerequisite rather than improvising.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w8-m3-fresh-machine-installation-q4",
+    "type": "short-answer",
+    "prompt": "What kind of path must not be required for a fresh-machine setup?",
+    "answer": "personal absolute path",
+    "explanation": "A setup depending on an individual's absolute path is not portable or reproducible."
+  },
+  {
+    "id": "w8-m3-fresh-machine-installation-q5",
+    "type": "self-explanation",
+    "prompt": "Explain clean-machine clone→env→Compose→migration/seed/import→AI bootstrap→smoke and the evidence proving no hidden state.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w8-m4-release-package-integrity-rollback-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Release Package, Integrity & Rollback?",
+    "options": [
+      "A release is an immutable validated package with traceable source, integrity evidence, documented exports and an explicit rollback decision—not merely a green build.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "A release is an immutable validated package with traceable source, integrity evidence, documented exports and an explicit rollback decision—not merely a green build.",
+    "explanation": "Release engineering creates an immutable, traceable deployment candidate. Version tags connect source to artifacts; checksums establish artifact integrity; release notes and exports capture operational state; an explicit rollback plan bounds impact when quality/security gates fail."
+  },
+  {
+    "id": "w8-m4-release-package-integrity-rollback-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: release manifest/tag/checksum/exports list",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: release manifest/tag/checksum/exports list",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w8-m4-release-package-integrity-rollback-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Verify the exact candidate revision, package manifest and checksum before promotion; stop if any item does not match.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Verify the exact candidate revision, package manifest and checksum before promotion; stop if any item does not match.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w8-m4-release-package-integrity-rollback-q4",
+    "type": "short-answer",
+    "prompt": "Which artifact-integrity value should accompany a release file?",
+    "answer": "SHA-256 checksum",
+    "explanation": "A SHA-256 checksum lets a recipient verify that the artifact matches the released file."
+  },
+  {
+    "id": "w8-m4-release-package-integrity-rollback-q5",
+    "type": "self-explanation",
+    "prompt": "Explain how tag, CHANGELOG, notes, checksum, exports, acceptance and rollback combine into a safe v0.9 release decision.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

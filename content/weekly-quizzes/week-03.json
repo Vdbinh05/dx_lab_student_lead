@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w3-m1-identity-authentication-authorization-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Identity: Authentication, Authorization & OIDC Map?",
+    "options": [
+      "Authentication proves identity; authorization is an independent Backend policy decision for a specific action/resource.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Authentication proves identity; authorization is an independent Backend policy decision for a specific action/resource.",
+    "explanation": "Authentication establishes a subject identity. Authorization evaluates whether that subject may perform an action on a resource. OAuth 2.0 delegates authorization; OpenID Connect layers identity tokens and standardized claims over OAuth 2.0. A resource server validates access tokens and makes its own policy decision."
+  },
+  {
+    "id": "w3-m1-identity-authentication-authorization-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: discovery + no-token 401 without secrets",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: discovery + no-token 401 without secrets",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w3-m1-identity-authentication-authorization-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Fetch OIDC discovery and make an unauthenticated protected-resource request before changing any policy.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Fetch OIDC discovery and make an unauthenticated protected-resource request before changing any policy.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w3-m1-identity-authentication-authorization-q4",
+    "type": "short-answer",
+    "prompt": "Protocol layer nào chuẩn hóa identity claims trên OAuth 2.0?",
+    "answer": "OIDC",
+    "explanation": "OpenID Connect is the identity layer built on OAuth 2.0."
+  },
+  {
+    "id": "w3-m1-identity-authentication-authorization-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích User→Portal→Keycloak→token→Backend và vì sao hidden button không phải security control.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w3-m2-keycloak-realm-client-users-roles-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Keycloak Realm, Client, Users & Roles?",
+    "options": [
+      "A Keycloak realm owns isolated identity objects; a client defines one application's protocol/redirect contract.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "A Keycloak realm owns isolated identity objects; a client defines one application's protocol/redirect contract.",
+    "explanation": "A Keycloak realm isolates users, credentials, clients, roles and protocol configuration. A client defines an application integration and allowed redirect URIs. Realm/client roles are assigned to users or groups and emitted only according to protocol mappers/scopes."
+  },
+  {
+    "id": "w3-m2-keycloak-realm-client-users-roles-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: redacted realm/client/role matrix",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: redacted realm/client/role matrix",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w3-m2-keycloak-realm-client-users-roles-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Verify realm discovery and compare exact Portal callback URL to the configured valid redirect URI.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Verify realm discovery and compare exact Portal callback URL to the configured valid redirect URI.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w3-m2-keycloak-realm-client-users-roles-q4",
+    "type": "short-answer",
+    "prompt": "Keycloak object nào tách users, clients and roles của application?",
+    "answer": "realm",
+    "explanation": "A realm is the tenant/security boundary for Keycloak-managed identity objects."
+  },
+  {
+    "id": "w3-m2-keycloak-realm-client-users-roles-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích realm/client/user/role and the safe four-demo-role setup without exposing credentials.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w3-m3-authorization-code-pkce-sso-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Authorization Code + PKCE & SSO?",
+    "options": [
+      "Authorization Code + PKCE exchanges a short-lived code only when the requester proves possession of the original verifier.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Authorization Code + PKCE exchanges a short-lived code only when the requester proves possession of the original verifier.",
+    "explanation": "Authorization Code with PKCE binds an authorization request's code_challenge to a token-exchange code_verifier, reducing authorization-code interception risk for public clients. The client validates state correlation and OIDC nonce semantics; an IdP session can supply SSO across participating clients."
+  },
+  {
+    "id": "w3-m3-authorization-code-pkce-sso-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "explanation: redacted flow diagram",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "explanation: redacted flow diagram",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w3-m3-authorization-code-pkce-sso-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Compare the browser callback URL exactly with Keycloak client redirect configuration and inspect the first redirect error.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Compare the browser callback URL exactly with Keycloak client redirect configuration and inspect the first redirect error.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w3-m3-authorization-code-pkce-sso-q4",
+    "type": "short-answer",
+    "prompt": "PKCE proof value kept by the client is called what?",
+    "answer": "code verifier",
+    "explanation": "The code verifier is held by the client and used at token exchange to prove the original request binding."
+  },
+  {
+    "id": "w3-m3-authorization-code-pkce-sso-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích Authorization Code + PKCE from browser redirect to Backend API and name each secret/non-secret boundary.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w3-m4-jwt-jwks-validation-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất JWT Claims, JWKS & Backend Validation?",
+    "options": [
+      "JWT decode reveals untrusted data; validation verifies signature and contextual claims against a trusted issuer/JWKS policy.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "JWT decode reveals untrusted data; validation verifies signature and contextual claims against a trusted issuer/JWKS policy.",
+    "explanation": "A JSON Web Token is a compact signed claims set. Secure resource-server validation resolves trusted issuer metadata/JWKS, verifies the cryptographic signature and validates claims such as issuer, audience/authorized party, expiration/not-before and authorization claims before use."
+  },
+  {
+    "id": "w3-m4-jwt-jwks-validation-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: discovery/JWKS/401 status without secret",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: discovery/JWKS/401 status without secret",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w3-m4-jwt-jwks-validation-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Classify the response as missing/invalid token 401, then trace header→exp→issuer→audience→JWKS→clock.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Classify the response as missing/invalid token 401, then trace header→exp→issuer→audience→JWKS→clock.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w3-m4-jwt-jwks-validation-q4",
+    "type": "short-answer",
+    "prompt": "Public signing keys used to verify JWT signatures are normally published through what document?",
+    "answer": "JWKS",
+    "explanation": "A JSON Web Key Set publishes public verification keys associated with an issuer."
+  },
+  {
+    "id": "w3-m4-jwt-jwks-validation-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích why decode ≠ validate and walk through iss/aud/azp/exp/JWKS checks for a 401.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

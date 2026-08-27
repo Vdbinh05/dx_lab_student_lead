@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w2-m1-docker-image-container-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Docker Image, Container & Dockerfile?",
+    "options": [
+      "Image là artifact layered; container là runtime instance được tạo từ image.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Image là artifact layered; container là runtime instance được tạo từ image.",
+    "explanation": "An image is a content-addressed, layered filesystem plus runtime metadata. A container is an isolated runtime instance of an image. Docker sends the selected build context to the builder, executes Dockerfile instructions, reuses cacheable layers, then starts the configured process through CMD/ENTRYPOINT."
+  },
+  {
+    "id": "w2-m1-docker-image-container-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: build/run/inspect/log relevant lines",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: build/run/inspect/log relevant lines",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w2-m1-docker-image-container-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Đọc first relevant build/runtime error rồi đối chiếu Dockerfile, build context và process command.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Đọc first relevant build/runtime error rồi đối chiếu Dockerfile, build context và process command.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w2-m1-docker-image-container-q4",
+    "type": "short-answer",
+    "prompt": "Lệnh nào tạo image từ Dockerfile và build context?",
+    "answer": "docker build",
+    "explanation": "docker build gửi context và thực thi Dockerfile để tạo image."
+  },
+  {
+    "id": "w2-m1-docker-image-container-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích Dockerfile → layer → image → container và vì sao sửa trong container không phải release fix.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w2-m2-compose-contracts-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Compose Service Contracts?",
+    "options": [
+      "Compose là declarative multi-service runtime contract; functional PASS vẫn cần health và use-case test.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Compose là declarative multi-service runtime contract; functional PASS vẫn cần health và use-case test.",
+    "explanation": "A Compose model declares services and their image/build source, process environment, network attachments, published ports, persistent mounts, healthchecks, restart policy and dependency conditions. The resolved model is the source for runtime orchestration, not a substitute for functional tests."
+  },
+  {
+    "id": "w2-m2-compose-contracts-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "config: resolved Compose excerpt không chứa secret",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "config: resolved Compose excerpt không chứa secret",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w2-m2-compose-contracts-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Chạy docker compose config và so resolved service/port/env/network với expected contract.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Chạy docker compose config và so resolved service/port/env/network với expected contract.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w2-m2-compose-contracts-q4",
+    "type": "short-answer",
+    "prompt": "Lệnh nào validate và render Compose model đã resolve?",
+    "answer": "docker compose config",
+    "explanation": "config parse, interpolate và hiển thị model mà engine sẽ dùng."
+  },
+  {
+    "id": "w2-m2-compose-contracts-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích build/image, ports, depends_on, healthcheck và restart trong một Compose service.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w2-m3-docker-network-dns-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Docker Network, Service DNS & localhost Trap?",
+    "options": [
+      "Containers cùng network gọi nhau bằng service name và internal port; localhost luôn quay lại chính namespace gọi.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Containers cùng network gọi nhau bằng service name và internal port; localhost luôn quay lại chính namespace gọi.",
+    "explanation": "A user-defined bridge network provides isolated L2/L3 connectivity and embedded DNS for service aliases. Network namespaces make loopback local to each container. Published ports install host-to-container forwarding; container-to-container traffic normally uses the destination service's internal port."
+  },
+  {
+    "id": "w2-m3-docker-network-dns-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: DNS + TCP + network membership",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: DNS + TCP + network membership",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w2-m3-docker-network-dns-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "Từ đúng source container, test service-name resolution rồi TCP tới internal port.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "Từ đúng source container, test service-name resolution rồi TCP tới internal port.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w2-m3-docker-network-dns-q4",
+    "type": "short-answer",
+    "prompt": "Backend trong Compose nên dùng hostname nào để gọi service postgres?",
+    "answer": "postgres",
+    "explanation": "Embedded DNS resolve service name postgres trong Compose network."
+  },
+  {
+    "id": "w2-m3-docker-network-dns-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích service DNS, localhost và internal/published port bằng hai đường gọi cụ thể.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  },
+  {
+    "id": "w2-m4-volume-persistence-q1",
+    "type": "multiple-choice",
+    "prompt": "Phát biểu nào mô tả đúng nhất Volumes, Bind Mounts & Persistence?",
+    "options": [
+      "Named volume tách data lifecycle khỏi container lifecycle; removing the volume is destructive.",
+      "Chỉ cần process tồn tại là toàn bộ use case đã PASS",
+      "Có thể bỏ qua evidence nếu lệnh không báo lỗi",
+      "SV1 phải giành implementation ownership từ SV2/SV3"
+    ],
+    "answer": "Named volume tách data lifecycle khỏi container lifecycle; removing the volume is destructive.",
+    "explanation": "Docker mounts replace a container path with storage managed by a named volume or a host bind source. Container recreation preserves named-volume data when the same volume is reattached. Removing a volume destroys its stored filesystem and is a separate lifecycle operation."
+  },
+  {
+    "id": "w2-m4-volume-persistence-q2",
+    "type": "multiple-choice",
+    "prompt": "Evidence nào phù hợp nhất cho mission này?",
+    "options": [
+      "terminal-output: container ID trước/sau + marker còn tồn tại",
+      "Một câu nói 'em đã hiểu' không kèm output",
+      "Restart ngẫu nhiên cho tới khi hết lỗi",
+      "Ảnh chứa secret/token thật"
+    ],
+    "answer": "terminal-output: container ID trước/sau + marker còn tồn tại",
+    "explanation": "Gate yêu cầu evidence gắn với capability thật và không làm lộ secret."
+  },
+  {
+    "id": "w2-m4-volume-persistence-q3",
+    "type": "multiple-choice",
+    "prompt": "Khi failure xuất hiện, hành động đầu tiên đúng là gì?",
+    "options": [
+      "So docker compose config/inspect mount source-target và đọc marker data từ service stateful.",
+      "Xóa volume để thử lại",
+      "Tắt validation/security",
+      "Đổi nhiều biến cùng lúc"
+    ],
+    "answer": "So docker compose config/inspect mount source-target và đọc marker data từ service stateful.",
+    "explanation": "Một test có chủ đích giữ được causal chain và evidence."
+  },
+  {
+    "id": "w2-m4-volume-persistence-q4",
+    "type": "short-answer",
+    "prompt": "Option nào của docker compose down xóa named volumes?",
+    "answer": "-v",
+    "explanation": "down -v removes named and anonymous volumes declared/attached by the project."
+  },
+  {
+    "id": "w2-m4-volume-persistence-q5",
+    "type": "self-explanation",
+    "prompt": "Giải thích restart, recreate, down và down -v tác động khác nhau lên container/data.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời phải tự diễn đạt causal chain, boundary và verification."
+  }
+]

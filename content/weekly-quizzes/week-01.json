@@ -1,0 +1,214 @@
+[
+  {
+    "id": "w1-m1-linux-orientation-q1",
+    "type": "multiple-choice",
+    "prompt": "Lệnh nào cho biết directory hiện tại?",
+    "options": [
+      "ls",
+      "pwd",
+      "cat",
+      "cd"
+    ],
+    "answer": "pwd",
+    "explanation": "pwd in absolute pathname của working directory."
+  },
+  {
+    "id": "w1-m1-linux-orientation-q2",
+    "type": "multiple-choice",
+    "prompt": "Path nào là absolute path?",
+    "options": [
+      "docs/runbook.md",
+      "../runbook.md",
+      "/home/sv1/runbook.md",
+      "./runbook.md"
+    ],
+    "answer": "/home/sv1/runbook.md",
+    "explanation": "Absolute path bắt đầu từ root /."
+  },
+  {
+    "id": "w1-m1-linux-orientation-q3",
+    "type": "short-answer",
+    "prompt": "Ký hiệu directory cha là gì?",
+    "answer": "..",
+    "explanation": "Hai dấu chấm trỏ tới parent directory."
+  },
+  {
+    "id": "w1-m1-linux-orientation-q4",
+    "type": "self-explanation",
+    "prompt": "Giải thích absolute và relative path bằng ví dụ của chính bạn.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Câu trả lời cần thể hiện path tuyệt đối độc lập với current directory."
+  },
+  {
+    "id": "w1-m1-linux-orientation-q5",
+    "type": "multiple-choice",
+    "prompt": "Khi lệnh báo sai path, evidence đầu tiên hữu ích nhất là gì?",
+    "options": [
+      "pwd và ls -la",
+      "restart máy",
+      "chmod 777",
+      "xóa directory"
+    ],
+    "answer": "pwd và ls -la",
+    "explanation": "Vị trí hiện tại và nội dung directory kiểm chứng giả thuyết path trước khi sửa."
+  },
+  {
+    "id": "w1-m2-files-permissions-env-q1",
+    "type": "multiple-choice",
+    "prompt": "File nào nên được commit?",
+    "options": [
+      ".env thật",
+      "private.key",
+      ".env.example",
+      "backup.dump"
+    ],
+    "answer": ".env.example",
+    "explanation": "Chỉ contract không chứa secret được commit."
+  },
+  {
+    "id": "w1-m2-files-permissions-env-q2",
+    "type": "multiple-choice",
+    "prompt": "chmod 640 cấp group quyền nào?",
+    "options": [
+      "read",
+      "write",
+      "execute",
+      "read + write"
+    ],
+    "answer": "read",
+    "explanation": "6=user rw, 4=group r, 0=others none."
+  },
+  {
+    "id": "w1-m2-files-permissions-env-q3",
+    "type": "short-answer",
+    "prompt": "Lệnh hiển thị cả hidden files?",
+    "answer": "ls -la",
+    "explanation": "-a hiển thị entries bắt đầu bằng dấu chấm."
+  },
+  {
+    "id": "w1-m2-files-permissions-env-q4",
+    "type": "self-explanation",
+    "prompt": "Giải thích vì sao không dùng chmod 777 như fix mặc định.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Quyền quá rộng làm tăng attack surface."
+  },
+  {
+    "id": "w1-m2-files-permissions-env-q5",
+    "type": "multiple-choice",
+    "prompt": "Nếu secret đã commit public, hành động ưu tiên là gì?",
+    "options": [
+      "Rotate/revoke secret",
+      "Chỉ xóa dòng ở commit mới",
+      "Đổi tên file",
+      "Ẩn Issue"
+    ],
+    "answer": "Rotate/revoke secret",
+    "explanation": "Secret đã lộ phải mất hiệu lực; xóa ở commit mới không thu hồi bản đã công khai."
+  },
+  {
+    "id": "w1-m3-processes-logs-resources-q1",
+    "type": "multiple-choice",
+    "prompt": "Lệnh nào xem cuối file log?",
+    "options": [
+      "head",
+      "tail",
+      "pwd",
+      "free"
+    ],
+    "answer": "tail",
+    "explanation": "tail đọc phần cuối file."
+  },
+  {
+    "id": "w1-m3-processes-logs-resources-q2",
+    "type": "multiple-choice",
+    "prompt": "Nên thử signal nào trước SIGKILL?",
+    "options": [
+      "SIGTERM",
+      "SIGSTOP",
+      "SIGHUP",
+      "SIGSEGV"
+    ],
+    "answer": "SIGTERM",
+    "explanation": "SIGTERM cho process cơ hội shutdown sạch."
+  },
+  {
+    "id": "w1-m3-processes-logs-resources-q3",
+    "type": "short-answer",
+    "prompt": "Lệnh xem disk usage dạng dễ đọc?",
+    "answer": "df -h",
+    "explanation": "df -h hiển thị filesystem disk usage."
+  },
+  {
+    "id": "w1-m3-processes-logs-resources-q4",
+    "type": "self-explanation",
+    "prompt": "Giải thích vì sao phải lấy log trước restart.",
+    "answer": "__EXPLANATION__",
+    "explanation": "Restart có thể làm mất trạng thái/evidence quan trọng."
+  },
+  {
+    "id": "w1-m3-processes-logs-resources-q5",
+    "type": "multiple-choice",
+    "prompt": "Running khác functional ở điểm nào?",
+    "options": [
+      "Running chỉ cho biết process chưa exit",
+      "Running chứng minh E2E pass",
+      "Functional chỉ là PID",
+      "Không khác"
+    ],
+    "answer": "Running chỉ cho biết process chưa exit",
+    "explanation": "Use case thật cần health/smoke/E2E, không thể suy ra chỉ từ process sống."
+  },
+  {
+    "id": "w1-m4-networking-fundamentals-q1",
+    "type": "multiple-choice",
+    "prompt": "localhost trong container trỏ tới đâu?",
+    "options": [
+      "Host machine",
+      "Container đó",
+      "PostgreSQL",
+      "Internet gateway"
+    ],
+    "answer": "Container đó",
+    "explanation": "Network namespace khiến localhost quay lại chính container."
+  },
+  {
+    "id": "w1-m4-networking-fundamentals-q2",
+    "type": "multiple-choice",
+    "prompt": "Công cụ nào xem TCP listening sockets?",
+    "options": [
+      "ss -lntp",
+      "df -h",
+      "git status",
+      "chmod"
+    ],
+    "answer": "ss -lntp",
+    "explanation": "ss hiển thị socket/listener."
+  },
+  {
+    "id": "w1-m4-networking-fundamentals-q3",
+    "type": "short-answer",
+    "prompt": "IPv4 loopback phổ biến là gì?",
+    "answer": "127.0.0.1",
+    "explanation": "127.0.0.1 là loopback address phổ biến."
+  },
+  {
+    "id": "w1-m4-networking-fundamentals-q4",
+    "type": "self-explanation",
+    "prompt": "Phân biệt bind 0.0.0.0 với URL client nên gọi.",
+    "answer": "__EXPLANATION__",
+    "explanation": "0.0.0.0 là wildcard bind, không phải destination thông thường."
+  },
+  {
+    "id": "w1-m4-networking-fundamentals-q5",
+    "type": "multiple-choice",
+    "prompt": "Connection refused thường chỉ ra điều gì trước tiên?",
+    "options": [
+      "Không có listener tại endpoint",
+      "HTTP route 404",
+      "JWT thiếu role",
+      "SQL sai"
+    ],
+    "answer": "Không có listener tại endpoint",
+    "explanation": "Refused xảy ra ở lớp kết nối trước khi có HTTP/JWT/SQL."
+  }
+]

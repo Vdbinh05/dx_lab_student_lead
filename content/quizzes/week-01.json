@@ -1,0 +1,312 @@
+{
+  "w1-m1-linux-orientation": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Lệnh nào cho biết directory hiện tại?",
+      "options": ["ls", "pwd", "cat", "cd"],
+      "answer": "pwd",
+      "explanation": "pwd in absolute pathname của working directory."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Path nào là absolute path?",
+      "options": [
+        "docs/runbook.md",
+        "../runbook.md",
+        "/home/sv1/runbook.md",
+        "./runbook.md"
+      ],
+      "answer": "/home/sv1/runbook.md",
+      "explanation": "Absolute path bắt đầu từ root /."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "Ký hiệu directory cha là gì?",
+      "answer": "..",
+      "explanation": "Hai dấu chấm trỏ tới parent directory."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Giải thích absolute và relative path bằng ví dụ của chính bạn.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Câu trả lời cần thể hiện path tuyệt đối độc lập với current directory."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Khi lệnh báo sai path, evidence đầu tiên hữu ích nhất là gì?",
+      "options": ["pwd và ls -la", "restart máy", "chmod 777", "xóa directory"],
+      "answer": "pwd và ls -la",
+      "explanation": "Vị trí hiện tại và nội dung directory kiểm chứng giả thuyết path trước khi sửa."
+    }
+  ],
+  "w1-m2-files-permissions-env": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "File nào nên được commit?",
+      "options": [".env thật", "private.key", ".env.example", "backup.dump"],
+      "answer": ".env.example",
+      "explanation": "Chỉ contract không chứa secret được commit."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "chmod 640 cấp group quyền nào?",
+      "options": ["read", "write", "execute", "read + write"],
+      "answer": "read",
+      "explanation": "6=user rw, 4=group r, 0=others none."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "Lệnh hiển thị cả hidden files?",
+      "answer": "ls -la",
+      "explanation": "-a hiển thị entries bắt đầu bằng dấu chấm."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Giải thích vì sao không dùng chmod 777 như fix mặc định.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Quyền quá rộng làm tăng attack surface."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Nếu secret đã commit public, hành động ưu tiên là gì?",
+      "options": ["Rotate/revoke secret", "Chỉ xóa dòng ở commit mới", "Đổi tên file", "Ẩn Issue"],
+      "answer": "Rotate/revoke secret",
+      "explanation": "Secret đã lộ phải mất hiệu lực; xóa ở commit mới không thu hồi bản đã công khai."
+    }
+  ],
+  "w1-m3-processes-logs-resources": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Lệnh nào xem cuối file log?",
+      "options": ["head", "tail", "pwd", "free"],
+      "answer": "tail",
+      "explanation": "tail đọc phần cuối file."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Nên thử signal nào trước SIGKILL?",
+      "options": ["SIGTERM", "SIGSTOP", "SIGHUP", "SIGSEGV"],
+      "answer": "SIGTERM",
+      "explanation": "SIGTERM cho process cơ hội shutdown sạch."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "Lệnh xem disk usage dạng dễ đọc?",
+      "answer": "df -h",
+      "explanation": "df -h hiển thị filesystem disk usage."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Giải thích vì sao phải lấy log trước restart.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Restart có thể làm mất trạng thái/evidence quan trọng."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Running khác functional ở điểm nào?",
+      "options": ["Running chỉ cho biết process chưa exit", "Running chứng minh E2E pass", "Functional chỉ là PID", "Không khác"],
+      "answer": "Running chỉ cho biết process chưa exit",
+      "explanation": "Use case thật cần health/smoke/E2E, không thể suy ra chỉ từ process sống."
+    }
+  ],
+  "w1-m4-networking-fundamentals": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "localhost trong container trỏ tới đâu?",
+      "options": [
+        "Host machine",
+        "Container đó",
+        "PostgreSQL",
+        "Internet gateway"
+      ],
+      "answer": "Container đó",
+      "explanation": "Network namespace khiến localhost quay lại chính container."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Công cụ nào xem TCP listening sockets?",
+      "options": ["ss -lntp", "df -h", "git status", "chmod"],
+      "answer": "ss -lntp",
+      "explanation": "ss hiển thị socket/listener."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "IPv4 loopback phổ biến là gì?",
+      "answer": "127.0.0.1",
+      "explanation": "127.0.0.1 là loopback address phổ biến."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Phân biệt bind 0.0.0.0 với URL client nên gọi.",
+      "answer": "__EXPLANATION__",
+      "explanation": "0.0.0.0 là wildcard bind, không phải destination thông thường."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Connection refused thường chỉ ra điều gì trước tiên?",
+      "options": ["Không có listener tại endpoint", "HTTP route 404", "JWT thiếu role", "SQL sai"],
+      "answer": "Không có listener tại endpoint",
+      "explanation": "Refused xảy ra ở lớp kết nối trước khi có HTTP/JWT/SQL."
+    }
+  ],
+  "w1-m5-http-curl-local-server": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "404 cho biết điều gì?",
+      "options": [
+        "Không có network",
+        "Đã tới HTTP server nhưng resource không có",
+        "DNS hỏng",
+        "Port không listen"
+      ],
+      "answer": "Đã tới HTTP server nhưng resource không có",
+      "explanation": "Có HTTP status nghĩa là request đã tới HTTP peer."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Port conflict thường xuất hiện khi nào?",
+      "options": [
+        "Hai process bind cùng address/port",
+        "DNS lookup",
+        "Đọc file",
+        "Git merge"
+      ],
+      "answer": "Hai process bind cùng address/port",
+      "explanation": "Listener thứ hai không bind được endpoint đã dùng."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "Lệnh CLI chính để gọi HTTP?",
+      "answer": "curl",
+      "explanation": "curl là HTTP client phổ biến trong runbook."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Phân biệt connection refused và HTTP 500.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Refused xảy ra trước HTTP; 500 là response của server."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "curl nhận HTTP 404 chứng minh tối thiểu điều gì?",
+      "options": ["Đã tới một HTTP server", "Database healthy", "RBAC đúng", "Workflow hoàn tất"],
+      "answer": "Đã tới một HTTP server",
+      "explanation": "HTTP status chứng minh transport tới HTTP peer; resource vẫn có thể sai."
+    }
+  ],
+  "w1-m6-git-open-source": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Lệnh nào xem staging và working tree?",
+      "options": ["git status", "git push", "git tag", "git remote"],
+      "answer": "git status",
+      "explanation": "git status là bảng điều khiển trạng thái."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Luồng đúng theo roadmap?",
+      "options": [
+        "Code → main",
+        "Issue → Branch → PR → Review → Merge",
+        "ZIP → upload",
+        "Commit secret → xóa sau"
+      ],
+      "answer": "Issue → Branch → PR → Review → Merge",
+      "explanation": "Open Source workflow cần trace/review/evidence."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "File nào thường ignore secret local?",
+      "answer": ".gitignore",
+      "explanation": ".gitignore khai báo pattern không track."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Giải thích working tree, staging và commit.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Ba trạng thái phải được phân biệt rõ."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Một task kỹ thuật được coi DONE khi nào?",
+      "options": ["Acceptance, test, review, integration và evidence đều đạt", "Code vừa chạy local", "Đã tạo branch", "Đã gửi ảnh"],
+      "answer": "Acceptance, test, review, integration và evidence đều đạt",
+      "explanation": "Roadmap khóa DONE bằng acceptance, test, review, integration, docs/config và evidence."
+    }
+  ],
+  "w1-m7-docker-compose-baseline": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "prompt": "Lệnh kiểm cấu hình Compose đã resolve?",
+      "options": [
+        "docker compose config",
+        "docker ps -a",
+        "docker pull",
+        "docker inspect image"
+      ],
+      "answer": "docker compose config",
+      "explanation": "config validate và render Compose model."
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "prompt": "Running có đồng nghĩa functional?",
+      "options": ["Có", "Không"],
+      "answer": "Không",
+      "explanation": "Process sống chưa chứng minh health/use case."
+    },
+    {
+      "id": "q3",
+      "type": "short-answer",
+      "prompt": "Lệnh xem 100 dòng log cuối service backend?",
+      "answer": "docker compose logs --tail=100 backend",
+      "explanation": "Logs được scope đúng service và tail."
+    },
+    {
+      "id": "q4",
+      "type": "self-explanation",
+      "prompt": "Giải thích image, container và Compose bằng lời của bạn.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Cần phân biệt artifact, runtime instance và orchestration contract."
+    },
+    {
+      "id": "q5",
+      "type": "multiple-choice",
+      "prompt": "Lệnh nào nên chạy trước khi up để phát hiện Compose contract sai?",
+      "options": ["docker compose config", "docker compose down -v", "docker system prune", "kill -9"],
+      "answer": "docker compose config",
+      "explanation": "compose config validate và render cấu hình đã resolve mà không phá dữ liệu."
+    }
+  ]
+}
