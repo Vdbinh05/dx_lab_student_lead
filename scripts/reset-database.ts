@@ -1,6 +1,5 @@
 import "dotenv/config";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { createDatabaseClient } from "../src/lib/database-client";
 import {
   resetLearnerState,
   seedDatabase,
@@ -14,11 +13,7 @@ async function main() {
     return;
   }
 
-  const prisma = new PrismaClient({
-    adapter: new PrismaBetterSqlite3({
-      url: process.env.DATABASE_URL ?? "file:./dev.db",
-    }),
-  });
+  const prisma = createDatabaseClient();
 
   try {
     await resetLearnerState(prisma);

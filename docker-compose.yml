@@ -3,11 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: dx-lab-sv1-training-os:0.1.0
+    image: dx-lab-sv1-training-os:0.2.0
     init: true
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      LOCAL_DATABASE_URL: file:/data/training.db
       DATABASE_URL: file:/data/training.db
       HOSTNAME: 0.0.0.0
       PORT: 3000

@@ -1,0 +1,5 @@
+.env
+.env.*
+artifacts/
+playwright-report/
+test-results/
