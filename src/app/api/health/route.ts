@@ -1,11 +1,9 @@
-import { applicationVersion } from "@/lib/app-version";
+import { db } from "@/lib/db";
+import { createHealthResponse } from "@/lib/health";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function GET() {
-  return Response.json(
-    { status: "ok", version: applicationVersion },
-    { headers: { "Cache-Control": "no-store" } },
-  );
+  return createHealthResponse(db);
 }
-

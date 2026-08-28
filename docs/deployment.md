@@ -1,6 +1,6 @@
 # Deployment and Data Safety
 
-DX-Lab SV1 Training OS is a single-user Next.js Node application backed by SQLite. The supported personal deployment stores the database on durable local disk or a Docker named volume. Do not deploy the database on ephemeral container storage.
+DX-Lab SV1 Training OS supports durable local/Docker SQLite and Vercel with remote Turso. Do not deploy a SQLite file on ephemeral container or function storage. Vercel procedures are in `docs/vercel-deployment.md`.
 
 Required runtime: Node.js 24.15.x (pinned in `.nvmrc` and the Docker base image).
 
@@ -15,7 +15,7 @@ npm run db:seed
 npm run dev
 ```
 
-Run from the repository root. Open `http://localhost:3000`. The default development database is `dev.db` because `.env` sets `DATABASE_URL="file:./dev.db"`. Seed is idempotent: it adds missing profile/skill records and never deletes progress.
+Run from the repository root. Open `http://localhost:3000`. The default development database is `dev.db` because `.env` sets `LOCAL_DATABASE_URL="file:./dev.db"` (with `DATABASE_URL` retained as a compatibility alias). Seed is idempotent: it adds missing profile/skill records and never deletes progress.
 
 ## Production Node build
 
@@ -59,7 +59,7 @@ docker compose ps
 docker compose logs --tail=100 app
 ```
 
-The health endpoint returns only `status` and the application `version`. It does not expose paths, environment variables, learner state, or database details.
+The health endpoint performs a database query and returns `status` plus the application `version`. On failure it returns HTTP 503 with only a generic database-unavailable marker. It does not expose paths, environment variables, learner state, or connection details.
 
 ## Preferred learner-state backup
 

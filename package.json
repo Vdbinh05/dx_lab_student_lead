@@ -1,31 +1,36 @@
 {
   "name": "my_web_dx_lab_student_lead",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
-    "node": ">=24.15.0 <25"
+    "node": "24.x"
   },
   "overrides": {
     "deepmerge-ts": "8.0.2"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "npm run check:repo-safety && npm run check:release && vitest run",
     "test:e2e": "playwright test",
     "test:docker-smoke": "tsx scripts/docker-smoke.ts",
+    "verify:live": "tsx scripts/verify-live-deployment.ts",
     "check:repo-safety": "node scripts/check-repo-safety.mjs",
     "check:release": "tsx scripts/release-audit.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:turso": "tsx scripts/migrate-turso.ts",
     "db:seed": "prisma db seed",
+    "db:verify": "tsx scripts/verify-database.ts",
     "db:reset": "tsx scripts/reset-database.ts"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.4",
     "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/adapter-libsql": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "better-sqlite3": "^13.0.3",
     "gray-matter": "^4.0.3",

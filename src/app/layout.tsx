@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Sidebar, MobileNav } from "@/components/navigation";
 import "./globals.css";
 
+export const runtime = "nodejs";
+
 export const metadata: Metadata = {
   title: "DX-Lab SV1 Training OS",
   description: "Personal technical training operating system for DX-Lab SV1.",

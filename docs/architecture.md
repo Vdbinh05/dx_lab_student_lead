@@ -2,13 +2,14 @@
 
 ## System boundary
 
-The product is a local-first, single-learner Next.js application. It deliberately has no authentication, cloud sync, AI chat, realtime collaboration, external search, or admin CMS. SV1 owns infrastructure, identity, integration, troubleshooting, coordination, release, and security coordination; SV2 and SV3 implementation boundaries remain explicit in the curriculum.
+The product is a single-learner Next.js application with local/Docker and Vercel deployment modes. It deliberately has no application authentication, AI chat, realtime collaboration, external search, or admin CMS. SV1 owns infrastructure, identity, integration, troubleshooting, coordination, release, and security coordination; SV2 and SV3 implementation boundaries remain explicit in the curriculum.
 
 ```text
 Browser
   → Next.js App Router / Server Actions
     → deterministic domain engines
-      → SQLite learner state
+      → Prisma persistence adapter
+        → local SQLite file or remote Turso
 
 Markdown + JSON curriculum
   → filesystem loader
@@ -79,4 +80,6 @@ Markdown is rendered without raw HTML. Evidence and notes are escaped by React. 
 
 ## Deployment boundary
 
-Self-hosted Node uses a persistent `DATABASE_URL`. Docker maps a named volume to `/data/training.db`; the container entrypoint runs additive migrations and idempotent seed before starting Next.js. The health endpoint exposes only application status and version. See `docs/deployment.md` for operational procedures.
+Self-hosted Node uses a persistent local SQLite URL. Docker maps a named volume to `/data/training.db`; the container entrypoint runs additive local migrations and idempotent seed before starting Next.js.
+
+On Vercel, the inherited Node.js runtime uses `@prisma/adapter-libsql` whenever both Turso variables are present. Vercel detection without complete Turso configuration fails fast. Prisma CLI stays bound to `LOCAL_DATABASE_URL`; Turso schema SQL is applied separately, so builds never migrate, seed, or write a local learner database. The health endpoint verifies a live database query but exposes no URL, token, path, or learner state. See `docs/deployment.md` and `docs/vercel-deployment.md`.

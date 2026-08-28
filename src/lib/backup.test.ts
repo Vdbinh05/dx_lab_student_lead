@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import Database from "better-sqlite3";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaClient } from "@/generated/prisma/client";
 import {
   createLearnerBackup,
@@ -38,6 +39,34 @@ afterAll(async () => {
 });
 
 describe("versioned learner backup", () => {
+  it("exports bootstrap state through the libSQL adapter used by Turso", async () => {
+    const libsql = new PrismaClient({
+      adapter: new PrismaLibSql({ url: "file::memory:?cache=shared" }),
+    });
+    for (const migration of [
+      "prisma/migrations/20260827193000_init/migration.sql",
+      "prisma/migrations/20260827203000_harden_progress/migration.sql",
+      "prisma/migrations/20260827221500_full_roadmap_state/migration.sql",
+    ]) {
+      const statements = readFileSync(migration, "utf8")
+        .replace(/^--.*$/gm, "")
+        .split(";")
+        .map((statement) => statement.trim())
+        .filter(Boolean);
+      for (const statement of statements)
+        await libsql.$executeRawUnsafe(statement);
+    }
+    try {
+      await seedDatabase(libsql);
+      const exported = await createLearnerBackup(libsql);
+      expect(exported.learnerProfile.id).toBe("local-learner");
+      expect(exported.skillProgress.length).toBeGreaterThan(0);
+      expect(exported.missionProgress).toHaveLength(0);
+    } finally {
+      await libsql.$disconnect();
+    }
+  });
+
   it("round-trips progress, notes, bookmarks, settings, and weekly state", async () => {
     await prisma.missionProgress.create({
       data: {

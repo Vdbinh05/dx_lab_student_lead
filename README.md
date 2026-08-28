@@ -11,23 +11,23 @@ Reading does not award competency. A mission passes only after its operational s
 
 ## Product coverage
 
-| Week | Focus | Missions |
-| --- | --- | ---: |
-| 1 | Linux, network, Git/Open Source, Docker/Compose baseline | 7 |
-| 2 | Docker L4, Compose, API, PostgreSQL, reverse proxy | 9 |
-| 3 | Keycloak, OIDC, JWT/JWKS, SSO, RBAC | 7 |
-| 4 | n8n, workflow state, retry, idempotency, HITL | 7 |
-| 5 | Operations, observability, Metabase, backup/restore | 7 |
-| 6 | Qdrant, Ollama, RAG infrastructure and handoff | 6 |
-| 7 | Agent tools, service auth, HITL, audit and red-team | 7 |
-| 8 | Regression, configuration freeze, fresh machine, release and Mock OLP | 7 |
+| Week | Focus                                                                 | Missions |
+| ---- | --------------------------------------------------------------------- | -------: |
+| 1    | Linux, network, Git/Open Source, Docker/Compose baseline              |        7 |
+| 2    | Docker L4, Compose, API, PostgreSQL, reverse proxy                    |        9 |
+| 3    | Keycloak, OIDC, JWT/JWKS, SSO, RBAC                                   |        7 |
+| 4    | n8n, workflow state, retry, idempotency, HITL                         |        7 |
+| 5    | Operations, observability, Metabase, backup/restore                   |        7 |
+| 6    | Qdrant, Ollama, RAG infrastructure and handoff                        |        6 |
+| 7    | Agent tools, service auth, HITL, audit and red-team                   |        7 |
+| 8    | Regression, configuration freeze, fresh machine, release and Mock OLP |        7 |
 
 The product contains 57 missions, 285 mission questions, 160 weekly questions, eight scenario Boss Fights, 50 tracked skills, and 24 oral-defense prompts. Every future week can be read, but mutations and PASS remain locked until the previous weekly gate passes.
 
 ## Architecture
 
 - Next.js 16.3 App Router, React 19, strict TypeScript, and Tailwind CSS.
-- Prisma 7 with SQLite and `@prisma/adapter-better-sqlite3`.
+- Prisma 7 with local SQLite through `@prisma/adapter-better-sqlite3` or remote Turso through `@prisma/adapter-libsql`.
 - File-based Markdown curriculum under `content/`, validated with Zod.
 - Server-side deterministic mission, weekly-gate, skill, incident, and readiness engines.
 - SQLite stores only learner state: progress, evidence, attempts, settings, notes, bookmarks, weekly gates, and oral reflections.
@@ -52,7 +52,11 @@ Open [http://localhost:3000](http://localhost:3000). On macOS/Linux, use `cp .en
 
 Seed is idempotent: it adds missing bootstrap records without deleting or overwriting learner attempts, evidence, notes, bookmarks, or PASS state. `npm run db:reset -- --yes` is the only CLI reset; it deliberately deletes progress and refuses to run without the explicit flag.
 
-## Production and Docker
+## Supported deployment modes
+
+Local development and Docker keep SQLite file persistence. Vercel uses Turso and fails fast if its remote settings are missing; it never falls back to an ephemeral function-local database.
+
+### Local and Docker
 
 For a production Node process, set `DATABASE_URL` to a writable persistent path, run migrations and seed, then build and start:
 
@@ -77,21 +81,25 @@ Invoke-RestMethod http://localhost:3000/api/health
 
 The container uses pinned Node 24.15.0. SQLite lives at `/data/training.db` on the named volume `dx_lab_sv1_training_data`. Container rebuilds and restarts preserve it. Do not run `docker compose down -v` unless intentionally deleting the volume after a verified backup. Full backup, restore, upgrade, rollback, and smoke-test instructions are in [docs/deployment.md](docs/deployment.md).
 
+### Vercel and Turso
+
+Production requires `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in both Preview and Production environments. Prisma migration generation remains local; committed SQLite migration SQL is applied to Turso with the Turso CLI before the idempotent seed runs. See [docs/vercel-deployment.md](docs/vercel-deployment.md) for setup, migration, deployment, persistence verification, custom-domain, and troubleshooting procedures.
+
 ## Learner interface
 
-| Route | Purpose |
-| --- | --- |
-| `/`, `/today` | Current position, blockers, and next actionable mission |
-| `/roadmap`, `/weeks/[week]` | Eight-week map and weekly operational brief |
-| `/weeks/[week]/review` | Gate status, counts, and exact remaining blockers |
-| `/learn/[week]/[mission]` | Concepts, commands, labs, failure drill, evidence, notes, quiz, and gate |
-| `/labs` | Guided, independent, and integration lab catalog |
-| `/incidents`, `/incidents/[id]` | Eight Boss Fights using the nine-step troubleshooting protocol |
-| `/evidence` | Evidence Vault with week, mission, skill, and type filters |
-| `/skills`, `/readiness` | Deterministic L0–L4 skills and ten readiness dimensions |
-| `/exams`, `/oral-defense` | Mission/weekly/final blueprint and oral-defense practice |
-| `/search`, `/bookmarks` | Local curriculum search and saved missions/labs/incidents |
-| `/settings` | Schedule, app version, JSON export/import, and destructive reset warning |
+| Route                           | Purpose                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| `/`, `/today`                   | Current position, blockers, and next actionable mission                  |
+| `/roadmap`, `/weeks/[week]`     | Eight-week map and weekly operational brief                              |
+| `/weeks/[week]/review`          | Gate status, counts, and exact remaining blockers                        |
+| `/learn/[week]/[mission]`       | Concepts, commands, labs, failure drill, evidence, notes, quiz, and gate |
+| `/labs`                         | Guided, independent, and integration lab catalog                         |
+| `/incidents`, `/incidents/[id]` | Eight Boss Fights using the nine-step troubleshooting protocol           |
+| `/evidence`                     | Evidence Vault with week, mission, skill, and type filters               |
+| `/skills`, `/readiness`         | Deterministic L0–L4 skills and ten readiness dimensions                  |
+| `/exams`, `/oral-defense`       | Mission/weekly/final blueprint and oral-defense practice                 |
+| `/search`, `/bookmarks`         | Local curriculum search and saved missions/labs/incidents                |
+| `/settings`                     | Schedule, app version, JSON export/import, and destructive reset warning |
 
 ## Gate and readiness rules
 
@@ -125,7 +133,7 @@ Curriculum validation checks all eight weeks, required mission sections, traceab
 
 ## Scope and limitations
 
-- Single trusted local learner; no multi-user authentication or cloud sync.
+- Single trusted learner; no multi-user authentication. Vercel mode stores that learner's state remotely in Turso.
 - Evidence is text/URL only; file upload is intentionally omitted for deployment safety.
 - Short answers use deterministic normalized matching; self-explanations use a minimum-quality heuristic and still rely on learner honesty plus evidence and gates.
 - The app teaches commands but does not execute learner infrastructure, control Docker, or provide a terminal emulator.

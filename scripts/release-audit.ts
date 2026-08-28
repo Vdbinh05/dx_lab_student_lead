@@ -171,7 +171,7 @@ requireAudit(
 );
 requireAudit(
   read(".nvmrc").trim() === "24.15.0" &&
-    packageJson.engines?.node === ">=24.15.0 <25",
+    packageJson.engines?.node === "24.x",
   "Node versions are not aligned",
 );
 for (const heading of [
