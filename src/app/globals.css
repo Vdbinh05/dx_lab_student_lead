@@ -67,6 +67,39 @@ button {
 .prose-training {
   color: #cbd5e1;
   line-height: 1.78;
+  overflow-wrap: anywhere;
+}
+.prose-training a {
+  color: #86eee9;
+  text-decoration: underline;
+}
+.prose-training table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.prose-training th,
+.prose-training td {
+  border: 1px solid #314052;
+  padding: 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+.teaching-reveal {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #315858;
+  border-radius: 10px;
+  background: #102222;
+}
+.teaching-reveal summary {
+  cursor: pointer;
+  color: #86eee9;
+  font-weight: 600;
+}
+.teaching-reveal summary:focus-visible {
+  outline: 2px solid #86eee9;
+  outline-offset: 4px;
 }
 .prose-training h2 {
   scroll-margin-top: 24px;
@@ -121,6 +154,9 @@ button {
   color: #dce7ee;
   font-size: 0.86rem;
   line-height: 1.6;
+}
+.command-block pre {
+  padding-top: 2.75rem;
 }
 .field {
   width: 100%;

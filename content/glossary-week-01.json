@@ -1,0 +1,186 @@
+[
+  {
+    "id": "terminal",
+    "term": "Terminal",
+    "short": "Cửa sổ nhập lệnh và hiển thị chữ.",
+    "detail": "Terminal là nơi giao tiếp; shell bên trong mới diễn giải lệnh. Một cửa sổ có thể mở nhiều tab, mỗi tab có shell riêng. Đổi giao diện terminal không đổi quy tắc lệnh của shell.",
+    "example": "Mở tab Ubuntu, gõ pwd rồi Enter.",
+    "related": ["shell", "command"]
+  },
+  {
+    "id": "shell",
+    "term": "Shell",
+    "short": "Chương trình diễn giải lệnh bạn gõ.",
+    "detail": "Ubuntu thường dùng Bash. Shell đọc tên lệnh, tùy chọn và đối số, tự làm một số việc như cd hoặc khởi động chương trình khác. Shell không hiểu ý định nếu bạn gõ sai tên.",
+    "example": "cd ~ đổi vị trí của shell về home.",
+    "related": ["terminal", "command", "working-directory"]
+  },
+  {
+    "id": "command",
+    "term": "Command",
+    "short": "Một chỉ thị yêu cầu máy thực hiện việc cụ thể.",
+    "detail": "Tên lệnh cho biết thao tác; tùy chọn điều chỉnh hành vi; đối số chỉ đối tượng. Khoảng trắng chia các phần, dấu nháy giữ câu có khoảng trắng thành một đối số. Linux phân biệt chữ hoa/thường.",
+    "example": "ls -la docs: lệnh ls, tùy chọn -la, đối số docs.",
+    "related": ["shell", "path"]
+  },
+  {
+    "id": "working-directory",
+    "term": "Working directory",
+    "short": "Thư mục hiện tại làm điểm bắt đầu cho relative path.",
+    "detail": "Mỗi process có vị trí hiện tại riêng. Khi dùng cd trong shell, vị trí của shell đổi; home của tài khoản không đổi. Nếu cd lỗi, bạn vẫn ở nơi cũ.",
+    "example": "pwd in vị trí; cd .. lên thư mục cha.",
+    "related": ["path", "home-directory", "process"]
+  },
+  {
+    "id": "filesystem",
+    "term": "Filesystem",
+    "short": "Cách tổ chức, lưu và tìm file/thư mục.",
+    "detail": "Hãy đọc cấu trúc tên như một cây: thư mục chứa tên file và thư mục con. Gốc Linux là /. Cây tên có thể kết hợp nhiều vùng lưu trữ, nên không phải sơ đồ một ổ vật lý duy nhất.",
+    "example": "/home/student/docs có docs trong student trong home.",
+    "related": ["root", "path", "disk"]
+  },
+  {
+    "id": "path",
+    "term": "Path",
+    "short": "Đường đi bằng tên để xác định file hoặc thư mục.",
+    "detail": "Absolute path bắt đầu từ /. Relative path bắt đầu ở working directory. Dấu / chia các cấp; . là hiện tại, .. là cha. Địa chỉ đúng vẫn có thể bị chặn vì quyền truy cập.",
+    "example": "Tại /home/student, docs/a.txt dẫn tới /home/student/docs/a.txt.",
+    "related": ["filesystem", "working-directory", "permission"]
+  },
+  {
+    "id": "root",
+    "term": "Root directory",
+    "short": "Dấu / là gốc cây thư mục Linux.",
+    "detail": "Mọi absolute path bắt đầu tại /. Home là một nơi trong cây; project root chỉ là gốc của một dự án cụ thể. Tài khoản tên root là user quản trị, không phải cùng khái niệm với root directory.",
+    "example": "/home nằm ngay dưới /.",
+    "related": ["filesystem", "home-directory", "path"]
+  },
+  {
+    "id": "home-directory",
+    "term": "Home directory",
+    "short": "Thư mục cá nhân của một tài khoản.",
+    "detail": "Trong Ubuntu thường là /home/ten-ban; không cần giống tên Windows. Bash mở rộng ~ thành home. Di chuyển tới thư mục khác không làm home đổi. Root user thường có home /root.",
+    "example": "cd ~ rồi pwd để xem home thật.",
+    "related": ["root", "working-directory", "shell"]
+  },
+  {
+    "id": "hidden-file",
+    "term": "Hidden file",
+    "short": "Tên bắt đầu dấu chấm, bị ls thường bỏ qua.",
+    "detail": "Ẩn là quy ước hiển thị, không phải khóa hay mã hóa. Ai có quyền đọc vẫn đọc được bằng đường dẫn. .env là ví dụ; ls -la hiện cả các tên ẩn.",
+    "example": "ls -la hiện .env nếu có.",
+    "related": ["permission", "environment-variable"]
+  },
+  {
+    "id": "environment-variable",
+    "term": "Environment variable",
+    "short": "Cặp tên/giá trị truyền cho chương trình khi bắt đầu.",
+    "detail": "Shell có biến riêng; export đánh dấu biến cho process con kế thừa. .env chỉ là file chữ cần công cụ đọc/nạp. Sửa biến shell không tự sửa file hoặc cập nhật process đã chạy trước đó.",
+    "example": "export DXLAB_STAGE=practice rồi printenv DXLAB_STAGE.",
+    "related": ["shell", "process", "hidden-file"]
+  },
+  {
+    "id": "permission",
+    "term": "Permission",
+    "short": "Quy tắc ai được đọc, ghi, thực thi.",
+    "detail": "Với quyền Linux cơ bản, chọn bộ owner, nếu không thì group phù hợp, nếu không thì others. Trên file r/w/x là đọc/sửa/chạy; trên directory là liệt kê/thay đổi entries/đi qua. Root và cơ chế quyền khác có thể làm kết quả khác lab tài khoản thường.",
+    "example": "-rw-r-----: owner đọc ghi, group đọc, others không quyền.",
+    "related": ["owner", "group", "chmod"]
+  },
+  {
+    "id": "owner",
+    "term": "Owner",
+    "short": "Tài khoản sở hữu file.",
+    "detail": "Tên owner trong ls -l xác định bộ quyền owner áp dụng cho ai. Owner không phải là tên một quyền. Dùng id để biết user hiện tại, rồi đối chiếu với ls -l trước khi sửa mode.",
+    "example": "stat -c '%U' original.txt in tên owner.",
+    "related": ["group", "permission", "chmod"]
+  },
+  {
+    "id": "group",
+    "term": "Group",
+    "short": "Nhóm tài khoản được dùng khi kiểm quyền.",
+    "detail": "Một file có một group gắn với nó; tài khoản có thể thuộc nhiều group. Nếu không là owner nhưng thuộc group của file, quyền group cơ bản áp dụng. Không cộng ba bộ quyền để lấy bộ rộng nhất.",
+    "example": "id hiển thị groups; ls -l hiển thị group của file.",
+    "related": ["owner", "permission"]
+  },
+  {
+    "id": "chmod",
+    "term": "chmod",
+    "short": "Lệnh thay đổi các bit quyền file/thư mục.",
+    "detail": "Mỗi chữ số là tổng read=4, write=2, execute=1 cho owner/group/others. Cách chữ u+x chỉ thêm execute cho owner. Chmod không thay chủ sở hữu, không mã hóa và không thu hồi bản sao đã công khai.",
+    "example": "chmod 640 original.txt; chmod u+x hello.sh.",
+    "related": ["permission", "owner", "group"]
+  },
+  {
+    "id": "program",
+    "term": "Program",
+    "short": "Tập chỉ dẫn có thể được thực hiện.",
+    "detail": "Chỉ dẫn được lưu chưa có nghĩa đang làm việc. Script là file chữ cần trình đọc như Bash/Python. Chạy hai lần có thể tạo hai process; dừng chúng không xóa program.",
+    "example": "hello.sh chứa chỉ dẫn; ./hello.sh yêu cầu thực hiện.",
+    "related": ["process", "shell", "disk"]
+  },
+  {
+    "id": "process",
+    "term": "Process",
+    "short": "Một lần chương trình đang hoạt động.",
+    "detail": "Hệ điều hành theo dõi PID, bộ nhớ, file mở và trạng thái của lần chạy. Process có thể đợi nên không nhất thiết dùng nhiều CPU. Một chương trình có thể có nhiều process cùng lúc.",
+    "example": "sleep 300 là một process đang đợi.",
+    "related": ["program", "pid", "cpu", "ram"]
+  },
+  {
+    "id": "pid",
+    "term": "PID",
+    "short": "Số nhận diện process trong môi trường đang quan sát.",
+    "detail": "PID giúp chọn đúng lần chạy để xem hoặc gửi signal. Số có thể tái sử dụng sau khi process kết thúc. PID trong container có thể khác khi nhìn ngoài container; luôn đối chiếu user và command, không dùng số cổng làm PID.",
+    "example": "ps aux: đọc cột USER, PID, COMMAND.",
+    "related": ["process", "signal", "service"]
+  },
+  {
+    "id": "signal",
+    "term": "Signal",
+    "short": "Thông báo hệ điều hành gửi tới process.",
+    "detail": "TERM yêu cầu kết thúc và cho cơ hội xử lý dọn dẹp; chương trình có thể bỏ qua nên phải verify. KILL cưỡng chế không cho xử lý dọn dẹp. Ctrl+C thường gửi INT tới nhóm foreground. Kill là tên lệnh gửi signal, không xóa file.",
+    "example": "kill -TERM PID sau khi thay PID bằng số server lab đã kiểm.",
+    "related": ["pid", "process", "program"]
+  },
+  {
+    "id": "service",
+    "term": "Service",
+    "short": "Chức năng phục vụ yêu cầu, thường chạy lâu.",
+    "detail": "Service có thể cần một hoặc nhiều process. Service manager như systemd quản lý vòng đời, nhưng không phải service nào cũng dùng nó. Process tồn tại chưa chứng minh chức năng trả lời đúng.",
+    "example": "Python HTTP server trả file khi curl gửi yêu cầu.",
+    "related": ["process", "pid", "log"]
+  },
+  {
+    "id": "log",
+    "term": "Log",
+    "short": "Bản ghi sự kiện do chương trình tạo.",
+    "detail": "Tìm thời điểm, yêu cầu và kết quả liên quan tới triệu chứng. Log có thể ghi ở đầu ra thường hoặc luồng lỗi, và có thể thiếu chi tiết. Grep chọn dòng theo mẫu, tail chọn phần cuối; một ERROR chưa chứng minh root cause.",
+    "example": "tail -n 5 server.log; grep '404' server.log.",
+    "related": ["service", "process", "disk"]
+  },
+  {
+    "id": "cpu",
+    "term": "CPU",
+    "short": "Bộ xử lý thực hiện chỉ dẫn.",
+    "detail": "Hình dung người làm phép tính. Process đang đợi có thể dùng CPU thấp. ps và top đo trong khoảng thời gian khác nhau; một số cao riêng lẻ không chứng minh lỗi hay yêu cầu kill.",
+    "example": "top: xem PID, COMMAND, %CPU; nhấn q thoát.",
+    "related": ["process", "ram", "disk"]
+  },
+  {
+    "id": "ram",
+    "term": "RAM",
+    "short": "Bộ nhớ làm việc của chương trình đang chạy.",
+    "detail": "Giống bàn làm việc, khác kho lưu file. Linux dùng RAM cho cache có thể thu hồi; free thấp chưa chắc thiếu RAM, nhìn available và triệu chứng. RAM nhìn trong WSL có thể khác tổng RAM Windows.",
+    "example": "free -h: xem Mem total và available.",
+    "related": ["cpu", "disk", "process"]
+  },
+  {
+    "id": "disk",
+    "term": "Disk",
+    "short": "Vùng lưu trữ giữ file qua các lần chạy chương trình.",
+    "detail": "Dừng server không xóa file trên disk. df đo dung lượng filesystem, không đo RAM hay chỉ kích thước thư mục. WSL dùng vùng lưu trữ riêng nên cần hiểu đang đo vùng nào.",
+    "example": "df -h . xem vùng chứa thư mục hiện tại.",
+    "related": ["filesystem", "ram", "log"]
+  }
+]

@@ -41,8 +41,8 @@ requireAudit(
 );
 requireAudit(missions.length === 57, `Expected 57 missions, found ${missions.length}`);
 requireAudit(
-  missionQuestionCount === 285,
-  `Expected 285 mission questions, found ${missionQuestionCount}`,
+  missionQuestionCount === 300,
+  `Expected 300 mission questions, found ${missionQuestionCount}`,
 );
 requireAudit(
   weeklyQuestionCount === 160,
@@ -125,6 +125,7 @@ const requiredPages = [
   "src/app/oral-defense/page.tsx",
   "src/app/readiness/page.tsx",
   "src/app/search/page.tsx",
+  "src/app/glossary/page.tsx",
   "src/app/bookmarks/page.tsx",
   "src/app/settings/page.tsx",
   "src/app/api/health/route.ts",

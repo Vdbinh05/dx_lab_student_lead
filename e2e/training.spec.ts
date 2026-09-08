@@ -43,13 +43,24 @@ test.describe.serial("critical learner flows", () => {
       await expect(evidence.getByText("Evidence đã được lưu")).toBeVisible();
     }
 
-    await page.getByLabel("pwd", { exact: true }).check();
-    await page.getByLabel("/home/sv1/runbook.md", { exact: true }).check();
-    await page.locator('textarea[name="q3"]').fill("..");
-    await page.locator('textarea[name="q4"]').fill(
-      "I verify the current directory before running commands so evidence and paths stay reproducible.",
-    );
-    await page.getByLabel("pwd và ls -la", { exact: true }).check();
+    const mission = getAllMissions().find(
+      (item) => item.id === "w1-m1-linux-orientation",
+    )!;
+    for (const question of mission.quiz) {
+      if (question.type === "multiple-choice") {
+        await page
+          .getByRole("radio", { name: question.answer, exact: true })
+          .check();
+      } else {
+        await page
+          .locator(`textarea[name="${question.id}"]`)
+          .fill(
+            question.type === "self-explanation"
+              ? "Relative paths depend on the current directory: docs/notes.txt works from project, but from project/docs I use notes.txt."
+              : question.answer,
+          );
+      }
+    }
     await page.getByRole("button", { name: "Nộp quiz" }).click();
     await expect(page.getByText(/Quiz 100% · PASS/)).toBeVisible();
     await page.reload();

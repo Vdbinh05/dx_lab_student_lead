@@ -3,7 +3,7 @@ import remarkGfm from "remark-gfm";
 import { CopyButton } from "@/components/interactive";
 export function CommandBlock({ code }: { code: string }) {
   return (
-    <div className="relative">
+    <div className="command-block relative">
       <CopyButton value={code} />
       <pre>
         <code>{code}</code>
@@ -101,12 +101,38 @@ export function MarkdownContent({ content }: { content: string }) {
         remarkPlugins={[remarkGfm]}
         components={{
           pre({ children }) {
-            const child = children as React.ReactElement<{ children?: string }>;
+            const child = children as React.ReactElement<{
+              children?: string;
+              className?: string;
+            }>;
             const code =
               typeof child?.props?.children === "string"
                 ? child.props.children.replace(/\n$/, "")
                 : String(child?.props?.children ?? "");
+            if (child?.props?.className === "language-teaching") {
+              const newline = code.indexOf("\n");
+              if (newline > 0)
+                return (
+                  <details className="teaching-reveal">
+                    <summary>{code.slice(0, newline)}</summary>
+                    <MarkdownContent content={code.slice(newline + 1)} />
+                  </details>
+                );
+            }
             return <CommandBlock code={code} />;
+          },
+          h2({ children }) {
+            const number = String(children).match(/^(\d+)\./)?.[1];
+            return (
+              <h2 id={number ? `section-${number}` : undefined}>{children}</h2>
+            );
+          },
+          table({ children }) {
+            return (
+              <div className="overflow-x-auto">
+                <table>{children}</table>
+              </div>
+            );
           },
         }}
       >

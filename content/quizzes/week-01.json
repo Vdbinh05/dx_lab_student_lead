@@ -3,125 +3,360 @@
     {
       "id": "q1",
       "type": "multiple-choice",
-      "prompt": "Lệnh nào cho biết directory hiện tại?",
-      "options": ["ls", "pwd", "cat", "cd"],
-      "answer": "pwd",
-      "explanation": "pwd in absolute pathname của working directory."
+      "prompt": "Working directory là gì?",
+      "options": [
+        "Thư mục hiện tại của shell",
+        "Home luôn cố định",
+        "File vừa mở",
+        "Gốc ổ Windows"
+      ],
+      "answer": "Thư mục hiện tại của shell",
+      "explanation": "Thư mục hiện tại của shell là điểm bắt đầu cho relative path; không nhất thiết là home."
     },
     {
       "id": "q2",
-      "type": "multiple-choice",
-      "prompt": "Path nào là absolute path?",
-      "options": [
-        "docs/runbook.md",
-        "../runbook.md",
-        "/home/sv1/runbook.md",
-        "./runbook.md"
-      ],
-      "answer": "/home/sv1/runbook.md",
-      "explanation": "Absolute path bắt đầu từ root /."
+      "type": "short-answer",
+      "prompt": "Lệnh nào in working directory? Chỉ ghi tên lệnh.",
+      "answer": "pwd",
+      "explanation": "pwd in vị trí hiện tại, giúp biết relative path bắt đầu ở đâu."
     },
     {
       "id": "q3",
-      "type": "short-answer",
-      "prompt": "Ký hiệu directory cha là gì?",
-      "answer": "..",
-      "explanation": "Hai dấu chấm trỏ tới parent directory."
+      "type": "multiple-choice",
+      "prompt": "Đứng ở /home/student/project/docs, cd .. đưa bạn tới đâu?",
+      "options": [
+        "/home/student",
+        "/",
+        "/home/student/project/docs",
+        "/home/student/project"
+      ],
+      "answer": "/home/student/project",
+      "explanation": ".. lên một cấp cha, không nhảy thẳng về home."
     },
     {
       "id": "q4",
-      "type": "self-explanation",
-      "prompt": "Giải thích absolute và relative path bằng ví dụ của chính bạn.",
-      "answer": "__EXPLANATION__",
-      "explanation": "Câu trả lời cần thể hiện path tuyệt đối độc lập với current directory."
+      "type": "multiple-choice",
+      "prompt": "Bạn mở tab Ubuntu mới: điều nào mô tả đúng terminal và shell?",
+      "options": [
+        "Shell là tên thư mục",
+        "Hai thứ luôn là cùng chương trình",
+        "Terminal nhận/hiện chữ, shell diễn giải lệnh",
+        "Terminal tự hiểu mọi câu tiếng Việt"
+      ],
+      "answer": "Terminal nhận/hiện chữ, shell diễn giải lệnh",
+      "explanation": "Cửa sổ giao tiếp khác chương trình đọc và thực hiện chỉ thị bên trong."
     },
     {
       "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Vì sao cùng docs/notes.txt đúng ở một nơi nhưng sai ở nơi khác? Nêu hai điểm xuất phát cụ thể.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Relative path được tính từ working directory; câu trả lời cần một ví dụ thay đổi điểm xuất phát và đường đi."
+    },
+    {
+      "id": "q6",
       "type": "multiple-choice",
-      "prompt": "Khi lệnh báo sai path, evidence đầu tiên hữu ích nhất là gì?",
-      "options": ["pwd và ls -la", "restart máy", "chmod 777", "xóa directory"],
+      "prompt": "Đang ở /home/student/project/docs/runbooks, đọc project/README.md bằng path nào?",
+      "options": [
+        "/README.md",
+        "../../README.md",
+        "../README.md",
+        "docs/README.md"
+      ],
+      "answer": "../../README.md",
+      "explanation": "Từ runbooks lên docs rồi project: hai lần .. trước README.md."
+    },
+    {
+      "id": "q7",
+      "type": "multiple-choice",
+      "prompt": "Muốn tạo nhiều cấp cha còn thiếu cho thư mục lab, dùng gì?",
+      "options": [
+        "mkdir -p ~/dx-lab-practice/week1/m1/docs",
+        "cat ~/dx-lab-practice/week1/m1/docs",
+        "pwd docs",
+        "cd -p docs"
+      ],
+      "answer": "mkdir -p ~/dx-lab-practice/week1/m1/docs",
+      "explanation": "mkdir -p tạo cả cấp cha còn thiếu; cd chỉ di chuyển vào nơi đã có."
+    },
+    {
+      "id": "q8",
+      "type": "multiple-choice",
+      "prompt": "File lab đã có câu đầu; muốn giữ nó và thêm câu mới dùng gì?",
+      "options": [
+        "echo \"cau hai\" > notes.txt",
+        "touch notes.txt rồi coi như đã có câu hai",
+        "pwd > notes.txt",
+        "echo \"cau hai\" >> notes.txt"
+      ],
+      "answer": "echo \"cau hai\" >> notes.txt",
+      "explanation": ">> nối thêm; > ghi đè. Sau ghi cần cat để xác nhận nội dung."
+    },
+    {
+      "id": "q9",
+      "type": "multiple-choice",
+      "prompt": "cat docs/notes.txt lỗi sau cd docs. Evidence đầu tiên nào hữu ích?",
+      "options": [
+        "Tạo thêm docs/docs ngay",
+        "Đổi quyền toàn bộ thư mục",
+        "pwd và ls -la",
+        "Restart máy"
+      ],
       "answer": "pwd và ls -la",
-      "explanation": "Vị trí hiện tại và nội dung directory kiểm chứng giả thuyết path trước khi sửa."
+      "explanation": "Vị trí và tên hiện có giúp kiểm giả thuyết lặp docs trước khi sửa dữ liệu."
+    },
+    {
+      "id": "q10",
+      "type": "multiple-choice",
+      "prompt": "cd Docs báo không tồn tại. Bước tiếp theo phù hợp là gì?",
+      "options": [
+        "Ghi đè notes.txt",
+        "Kiểm pwd và ls, so chữ hoa/thường rồi dùng tên đúng",
+        "Giả sử đã di chuyển thành công",
+        "Xóa thư mục docs"
+      ],
+      "answer": "Kiểm pwd và ls, so chữ hoa/thường rồi dùng tên đúng",
+      "explanation": "cd lỗi giữ nguyên vị trí; Docs và docs khác nhau trên Linux."
     }
   ],
   "w1-m2-files-permissions-env": [
     {
       "id": "q1",
       "type": "multiple-choice",
-      "prompt": "File nào nên được commit?",
-      "options": [".env thật", "private.key", ".env.example", "backup.dump"],
-      "answer": ".env.example",
-      "explanation": "Chỉ contract không chứa secret được commit."
+      "prompt": "Owner của file là gì?",
+      "options": [
+        "Tài khoản sở hữu file",
+        "Nhóm quyền read",
+        "Tên chương trình đang chạy",
+        "Mọi tài khoản trên máy"
+      ],
+      "answer": "Tài khoản sở hữu file",
+      "explanation": "Owner là ai; read/write/execute là các thao tác được cho phép."
     },
     {
       "id": "q2",
-      "type": "multiple-choice",
-      "prompt": "chmod 640 cấp group quyền nào?",
-      "options": ["read", "write", "execute", "read + write"],
-      "answer": "read",
-      "explanation": "6=user rw, 4=group r, 0=others none."
+      "type": "short-answer",
+      "prompt": "Ký tự quyền đọc trong rwx là gì? Chỉ ghi một ký tự.",
+      "answer": "r",
+      "explanation": "r là read; w là write; x là execute. Chọn đúng bộ owner/group/others trước."
     },
     {
       "id": "q3",
-      "type": "short-answer",
-      "prompt": "Lệnh hiển thị cả hidden files?",
-      "answer": "ls -la",
-      "explanation": "-a hiển thị entries bắt đầu bằng dấu chấm."
+      "type": "multiple-choice",
+      "prompt": "Bạn là owner, mode 640. Bạn và group được làm gì với file?",
+      "options": [
+        "Owner chỉ đọc, group chạy",
+        "Mọi người đều ghi",
+        "Owner chạy, group ghi",
+        "Owner đọc ghi, group đọc"
+      ],
+      "answer": "Owner đọc ghi, group đọc",
+      "explanation": "6=4+2 đọc ghi cho owner; 4 đọc cho group; 0 không quyền cho others."
     },
     {
       "id": "q4",
-      "type": "self-explanation",
-      "prompt": "Giải thích vì sao không dùng chmod 777 như fix mặc định.",
-      "answer": "__EXPLANATION__",
-      "explanation": "Quyền quá rộng làm tăng attack surface."
+      "type": "multiple-choice",
+      "prompt": "Chỉ tạo .env chứa DXLAB_STAGE=practice; điều nào đúng?",
+      "options": [
+        "Mọi app đang chạy tự cập nhật",
+        "File bị mã hóa tự động",
+        "Cần công cụ đọc/nạp, printenv chưa tự có biến",
+        "Dấu chấm tự export biến"
+      ],
+      "answer": "Cần công cụ đọc/nạp, printenv chưa tự có biến",
+      "explanation": "File là dữ liệu; biến môi trường là cấu hình được truyền. Tên .env không tạo cơ chế nạp tự động."
     },
     {
       "id": "q5",
+      "type": "self-explanation",
+      "prompt": "Vì sao hidden và Git ignored vẫn chưa bảo vệ một secret từng công khai? Nêu hành động cần làm.",
+      "answer": "__EXPLANATION__",
+      "explanation": "Ẩn chỉ là hiển thị; ignore không thu hồi lịch sử/bản sao. Cần revoke/rotate để secret cũ mất hiệu lực."
+    },
+    {
+      "id": "q6",
       "type": "multiple-choice",
-      "prompt": "Nếu secret đã commit public, hành động ưu tiên là gì?",
-      "options": ["Rotate/revoke secret", "Chỉ xóa dòng ở commit mới", "Đổi tên file", "Ẩn Issue"],
-      "answer": "Rotate/revoke secret",
-      "explanation": "Secret đã lộ phải mất hiệu lực; xóa ở commit mới không thu hồi bản đã công khai."
+      "prompt": "Script lab có mode 600, owner cần chạy trực tiếp và giữ quyền người khác như cũ. Chọn thay đổi nào?",
+      "options": [
+        "mv hello.sh .hello.sh",
+        "chmod u+x hello.sh",
+        "chmod 777 hello.sh",
+        "chmod o+w hello.sh"
+      ],
+      "answer": "chmod u+x hello.sh",
+      "explanation": "u+x thêm đúng execute cho owner; mode thành 700, không mở group/others."
+    },
+    {
+      "id": "q7",
+      "type": "multiple-choice",
+      "prompt": "Muốn process con mới nhận DXLAB_STAGE=demo trong shell hiện tại, dùng gì?",
+      "options": [
+        "export DXLAB_STAGE=demo",
+        "touch .env",
+        "cat .env",
+        "echo DXLAB_STAGE"
+      ],
+      "answer": "export DXLAB_STAGE=demo",
+      "explanation": "Export gán/đánh dấu giá trị truyền cho con. Không tự sửa file hay app đã chạy từ trước."
+    },
+    {
+      "id": "q8",
+      "type": "multiple-choice",
+      "prompt": "Muốn giữ bản gốc khi thử sửa file, thao tác nào phù hợp?",
+      "options": [
+        "mv original.txt copy.txt rồi nói còn hai bản",
+        "rm original.txt",
+        "echo \"moi\" > original.txt",
+        "cp -i original.txt copy.txt rồi sửa copy"
+      ],
+      "answer": "cp -i original.txt copy.txt rồi sửa copy",
+      "explanation": "Copy tạo bản độc lập trong lab; -i hỏi nếu đích có sẵn, không phải bảo đảm backup toàn máy."
+    },
+    {
+      "id": "q9",
+      "type": "multiple-choice",
+      "prompt": "cat file lab báo Permission denied với owner mode 200. Cần kiểm và sửa gì?",
+      "options": [
+        "Xóa nội dung file",
+        "Chạy mọi lệnh với sudo",
+        "Đối chiếu id/owner rồi thêm u+r trên file lab",
+        "Thêm execute cho others"
+      ],
+      "answer": "Đối chiếu id/owner rồi thêm u+r trên file lab",
+      "explanation": "200 là owner write nhưng thiếu read. Evidence xác định đúng user và bit trước sửa."
+    },
+    {
+      "id": "q10",
+      "type": "multiple-choice",
+      "prompt": "Secret đã công khai trong lịch sử Git; ưu tiên nào xử lý hiệu lực truy cập?",
+      "options": [
+        "Chỉ xóa dòng ở commit mới",
+        "Revoke/rotate, cập nhật consumers và kiểm secret cũ mất hiệu lực",
+        "Chỉ đổi tên thành file ẩn",
+        "Chỉ thêm .env vào .gitignore"
+      ],
+      "answer": "Revoke/rotate, cập nhật consumers và kiểm secret cũ mất hiệu lực",
+      "explanation": "Xóa hay ignore không thu hồi các bản đã lấy. Cần vô hiệu hóa secret cũ và xác minh dịch vụ dùng cấu hình mới."
     }
   ],
   "w1-m3-processes-logs-resources": [
     {
       "id": "q1",
       "type": "multiple-choice",
-      "prompt": "Lệnh nào xem cuối file log?",
-      "options": ["head", "tail", "pwd", "free"],
-      "answer": "tail",
-      "explanation": "tail đọc phần cuối file."
+      "prompt": "PID dùng để nhận diện gì?",
+      "options": [
+        "Một process trong môi trường đang quan sát",
+        "Một cổng HTTP",
+        "Tên file chương trình",
+        "Tổng dung lượng RAM"
+      ],
+      "answer": "Một process trong môi trường đang quan sát",
+      "explanation": "PID nhận diện lần chạy và có thể tái sử dụng, nên phải kiểm user/command trước signal."
     },
     {
       "id": "q2",
-      "type": "multiple-choice",
-      "prompt": "Nên thử signal nào trước SIGKILL?",
-      "options": ["SIGTERM", "SIGSTOP", "SIGHUP", "SIGSEGV"],
-      "answer": "SIGTERM",
-      "explanation": "SIGTERM cho process cơ hội shutdown sạch."
+      "type": "short-answer",
+      "prompt": "Lệnh nào xem phần cuối file log? Chỉ ghi tên lệnh.",
+      "answer": "tail",
+      "explanation": "tail chọn phần cuối; grep chọn dòng theo nội dung, không mặc định chỉ xem cuối."
     },
     {
       "id": "q3",
-      "type": "short-answer",
-      "prompt": "Lệnh xem disk usage dạng dễ đọc?",
-      "answer": "df -h",
-      "explanation": "df -h hiển thị filesystem disk usage."
+      "type": "multiple-choice",
+      "prompt": "Sau khi dừng server lab bằng TERM, file index.html thế nào?",
+      "options": [
+        "Bị kill xóa tự động",
+        "Chuyển thành RAM",
+        "Đổi tên theo PID mới",
+        "Vẫn còn trên disk nếu không có thao tác xóa"
+      ],
+      "answer": "Vẫn còn trên disk nếu không có thao tác xóa",
+      "explanation": "Signal tác động process, không xóa chương trình hay file dữ liệu."
     },
     {
       "id": "q4",
-      "type": "self-explanation",
-      "prompt": "Giải thích vì sao phải lấy log trước restart.",
-      "answer": "__EXPLANATION__",
-      "explanation": "Restart có thể làm mất trạng thái/evidence quan trọng."
+      "type": "multiple-choice",
+      "prompt": "Server có PID nhưng URL file thiếu trả 404. Kết luận nào được evidence hỗ trợ?",
+      "options": [
+        "RAM chắc chắn đầy",
+        "Mọi nghiệp vụ đều khỏe",
+        "Server đã trả lời nhưng tài nguyên yêu cầu không có",
+        "Process chắc chắn đã chết"
+      ],
+      "answer": "Server đã trả lời nhưng tài nguyên yêu cầu không có",
+      "explanation": "404 là phản hồi HTTP; running không chứng minh đúng tài nguyên hoặc mọi chức năng."
     },
     {
       "id": "q5",
+      "type": "self-explanation",
+      "prompt": "So sánh CPU, RAM và disk bằng một ví dụ DX-Lab. Vì sao app chậm chưa đủ để kết luận thiếu RAM?",
+      "answer": "__EXPLANATION__",
+      "explanation": "CPU thực hiện, RAM chứa dữ liệu đang làm, disk giữ file. Cần số đo/log và baseline, không đoán từ một triệu chứng."
+    },
+    {
+      "id": "q6",
       "type": "multiple-choice",
-      "prompt": "Running khác functional ở điểm nào?",
-      "options": ["Running chỉ cho biết process chưa exit", "Running chứng minh E2E pass", "Functional chỉ là PID", "Không khác"],
-      "answer": "Running chỉ cho biết process chưa exit",
-      "explanation": "Use case thật cần health/smoke/E2E, không thể suy ra chỉ từ process sống."
+      "prompt": "Muốn hai dòng lỗi ERROR gần nhất dù cuối log có INFO, dùng gì?",
+      "options": [
+        "Chỉ df -h .",
+        "grep ERROR app.log rồi pipe sang tail -n 2",
+        "Chỉ tail -n 2 app.log",
+        "Chỉ pwd"
+      ],
+      "answer": "grep ERROR app.log rồi pipe sang tail -n 2",
+      "explanation": "Lọc nội dung trước, sau đó chọn hai dòng cuối trong kết quả khớp."
+    },
+    {
+      "id": "q7",
+      "type": "multiple-choice",
+      "prompt": "Trong ps aux, muốn dừng đúng server lab, cần đối chiếu gì?",
+      "options": [
+        "USER, PID và COMMAND với lệnh/cổng lab",
+        "Chỉ lấy số 8765 làm PID",
+        "Chọn process CPU cao nhất",
+        "Chọn dòng đầu danh sách"
+      ],
+      "answer": "USER, PID và COMMAND với lệnh/cổng lab",
+      "explanation": "PID chọn process, port chọn điểm nhận. Xác minh user/args ngay trước TERM tránh tác động nhầm."
+    },
+    {
+      "id": "q8",
+      "type": "multiple-choice",
+      "prompt": "Muốn biết vùng chứa thư mục lab còn chỗ lưu log không, dùng gì?",
+      "options": [
+        "free -h rồi chỉ nhìn free",
+        "kill -TERM PID",
+        "cat index.html",
+        "df -h . và đọc Avail/Use%"
+      ],
+      "answer": "df -h . và đọc Avail/Use%",
+      "explanation": "df đo filesystem chứa ., không đo RAM hay chỉ kích thước một thư mục."
+    },
+    {
+      "id": "q9",
+      "type": "multiple-choice",
+      "prompt": "Sau TERM, curl vẫn trả 200. Nên làm gì tiếp?",
+      "options": [
+        "Gửi KILL cho mọi Python",
+        "Xóa index.html",
+        "Kiểm lại PID/user/args và tab server, không đoán đã dừng",
+        "Ghi báo cáo thành công theo dự đoán"
+      ],
+      "answer": "Kiểm lại PID/user/args và tab server, không đoán đã dừng",
+      "explanation": "TERM là yêu cầu, không bảo đảm kết thúc; cũng có thể server khác đang trả lời. Cần evidence mới."
+    },
+    {
+      "id": "q10",
+      "type": "multiple-choice",
+      "prompt": "Server báo Address already in use ngay lúc start. Cách xử lý an toàn trong lab?",
+      "options": [
+        "Dùng sudo để chiếm cổng",
+        "Không kill chủ cổng chưa biết; chọn cổng lab khác và đổi nhất quán các lệnh",
+        "Xóa server.log rồi coi là sửa xong",
+        "Gửi TERM tới số cổng"
+      ],
+      "answer": "Không kill chủ cổng chưa biết; chọn cổng lab khác và đổi nhất quán các lệnh",
+      "explanation": "Cổng đang có người dùng; đổi lựa chọn lab nhất quán giữ an toàn và cần curl/log verify lại."
     }
   ],
   "w1-m4-networking-fundamentals": [
