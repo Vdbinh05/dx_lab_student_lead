@@ -116,7 +116,7 @@ cd -
 pwd
 ```
 
-**WHERE TO RUN:** Ubuntu, bất kỳ vị trí nào. **WHY:** quan sát chấm hiện tại di chuyển. `cd` = change directory; `cd ~` về home; `ls` liệt kê tên ở vị trí hiện tại; `cd ..` lên thư mục cha; `cd -` về thư mục vừa đứng trước đó. **EXPECTED OUTPUT:** `pwd` thứ hai thường là `/home`, cuối cùng về home bạn. `cd -` cũng tự in đường dẫn quay về. `ls` không in gì có thể chỉ là thư mục trống.
+**WHERE TO RUN:** Ubuntu, bất kỳ vị trí nào. **WHY:** quan sát chấm hiện tại di chuyển. `cd` = change directory; `cd ~` về home; `ls` liệt kê tên ở vị trí hiện tại; `cd ..` lên thư mục cha; `cd -` về thư mục vừa đứng trước đó. **EXPECTED OUTPUT:** `pwd` thứ hai thường là `/home`, cuối cùng về home bạn. `cd -` cũng tự in đường dẫn quay về. `ls` không in gì có thể chỉ là thư mục trống. Nhiều lệnh Unix/Linux im lặng khi thành công, nhưng không phải mọi lệnh. Không có output không tự có nghĩa thất bại hoặc chưa chạy; kiểm trạng thái bằng `pwd`, `ls` hay `cat` tùy việc vừa làm.
 
 **COMMON FAILURE / verify:** `cd -` trong shell chưa có vị trí trước có thể báo `OLDPWD not set`; dùng `cd ~`, thực hiện lại chuỗi. So sánh ba dòng `pwd` để kiểm chứng. Trong DX-Lab, vị trí này quyết định lệnh tìm file cấu hình ở đâu.
 
@@ -143,6 +143,7 @@ Bạn nói “đọc notes.txt” nhưng có ba file cùng tên ở ba nơi. Má
 | `/` và `~` | Gốc toàn cây và home của tài khoản; home nằm trong cây |
 | `/home/student/project/docs` và `docs` | Đường đi từ gốc và đường đi từ vị trí hiện tại |
 | `.` và `..` | Đứng yên tại cấp hiện tại và lên cấp cha |
+| `~` | Bash mở rộng thành home trước khi lệnh nhận path; không phải một tên relative giống `.` hay `..` |
 | `~/project` và `/project` | Thư mục trong home và thư mục ngay dưới root |
 
 **Mini experiment:** chuẩn bị hai cấp; chưa có file nên chỉ di chuyển.
@@ -293,3 +294,30 @@ Làm 10 câu **Quiz** ở bảng Gate (trên mobile kéo xuống dưới bài), 
 ### GIẢI THÍCH CHO MỘT NGƯỜI CHƯA HỌC IT
 
 Trong 3–5 câu, giải thích “đường dẫn file là gì”, dùng ví dụ địa chỉ và lời chỉ đường. Nêu điều gì thay đổi khi bạn đứng ở thư mục khác; tránh chỉ liệt kê tên lệnh.
+
+
+### Kiểm tra hành động bằng DX-Verify — pilot V3
+
+Sau lab, tạo chỗ giữ bằng chứng trong **WSL / Ubuntu**:
+
+```bash
+mkdir -p ~/dx-lab-practice/week1/m1/evidence
+```
+
+`-p` tạo thư mục nếu thiếu; thường không in gì. Kiểm bằng `ls -ld ~/dx-lab-practice/week1/m1/evidence`: `-d` xem chính thư mục, không liệt kê bên trong. Dòng bắt đầu `d` cho biết đó là directory. Nếu lỗi, kiểm từng cấp path bằng `pwd` và `ls` trước khi thử lại.
+
+Giữ file đã làm ở lab: `m1/docs/notes.txt` và `m1/independent/docs/notes.txt`, đều có nội dung.
+
+**Chạy ở đâu:** Ubuntu, từ thư mục repository Training OS (thư mục chứa `scripts/dx-verify.py`), không phải từ thư mục bài tập. Nếu repo nằm ở ổ D như bản cài này, dùng `cd "/mnt/d/DX OS/my_web_dx_lab_student_lead"`; dấu nháy giữ đường dẫn có khoảng trắng. `ls scripts/dx-verify.py` kiểm đúng file trước khi chạy. Nếu repo ở nơi khác, dùng đường dẫn thật của repo; không đoán.
+
+```bash
+python3 scripts/dx-verify.py week-01 mission-01
+```
+
+`python3` chạy script verifier của repo; hai đối số chọn đúng tuần/bài. Script chỉ xem metadata (loại file, kích thước, quyền) tại các đường dẫn lab cố định; không đọc nội dung file, không chạy script bạn viết và không gửi dữ liệu qua mạng. Không dùng sudo. Nếu `python3` chưa có, xem bước chuẩn bị công cụ trong [Mission 3](/learn/week-01/mission-03#section-1).
+
+**Đọc kết quả:** `checks` là từng phép kiểm; `status: pass` là thấy dấu vết mong đợi; `fail` là thiếu hoặc khác trạng thái yêu cầu. `overall` chỉ pass khi mọi check pass. Lệnh trả mã 1 nếu có fail — đó là kết quả kiểm, không phải yêu cầu cài lại máy. Kiểm file tương ứng bằng `ls` / `stat`, sửa đúng bài tập rồi chạy lại. Không sửa JSON để đổi fail thành pass.
+
+Copy toàn bộ JSON từ dấu `{` đến `}` vào **DX-Verify · Action evidence** ở cuối trang, chọn **Lưu verification report**. Report không chứa tên tài khoản, path tuyệt đối, PID hay nội dung file. Đây là báo cáo tự nộp từ máy bạn, có thể bị sửa; nó không thay thế output thật, tự giải thích, quiz hay gate. Verifier không chứng minh nguyên nhân lỗi hoặc bạn đã tự làm.
+
+**Nhớ lại ngày mai:** vào [Today](/today), trả lời warm-up trước khi mở đáp án. Nếu chưa nhớ, chọn 1 ngày; nếu khó, 3 ngày; nhớ đúng liên tiếp được hẹn 7 → 14 → 30 ngày. Không cần ôn nội dung chưa học.

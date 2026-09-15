@@ -35,6 +35,10 @@ The product contains 57 missions, 300 mission questions (including the three Tea
 
 See [docs/architecture.md](docs/architecture.md), [docs/security.md](docs/security.md), and [docs/curriculum-audit.md](docs/curriculum-audit.md).
 
+## Learning Architecture V3 pilot
+
+Branch-only learner review: [architecture and local migration/rollback](docs/learning-architecture-v3.md), [implementation and QA](docs/learning-v3-implementation-report.md). Scheduled recall and local M1–M3 verification preserve Teaching V2 and existing gates. Production remains v0.2.0; do not deploy this branch against an unmigrated database.
+
 ## Local setup
 
 Required: Node.js 24.15.x and npm. The pinned version is in `.nvmrc`.

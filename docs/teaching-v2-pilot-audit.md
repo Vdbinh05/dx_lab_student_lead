@@ -210,3 +210,7 @@ Legacy test adjustment: the old test required exactly 16 numbered headings for e
 | W1-M3 | Pending | Pending | Pending |
 
 Ask the learner to choose A very easy, B understandable but slightly tiring, C needed Google for core concepts, or D did not understand. Record concrete missing concepts before any expansion. Only A/B without core Google dependency can later be considered Gold Standard. Stop here; do not scale to Mission 4 or later weeks.
+
+## Learning Architecture V3 follow-up — 2026-09-15
+
+V2 remains the teaching authority. V3 preserves all three pilots and their quizzes, adds five presentation links and verification/recall handoff, clarifies terminal silence/tilde/SIGINT, and groups navigation/incidents. Editorial rubric remains M1 34/36, M2 34/36, M3 33/36 with the same human-review limits. See [V3 implementation report](learning-v3-implementation-report.md) for current QA and persistence decisions. No real learner A/B review or no-Google outcome has yet been collected; no final Gold Standard claim.

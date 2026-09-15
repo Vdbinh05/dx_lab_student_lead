@@ -43,7 +43,7 @@
     "id": "path",
     "term": "Path",
     "short": "Đường đi bằng tên để xác định file hoặc thư mục.",
-    "detail": "Absolute path bắt đầu từ /. Relative path bắt đầu ở working directory. Dấu / chia các cấp; . là hiện tại, .. là cha. Địa chỉ đúng vẫn có thể bị chặn vì quyền truy cập.",
+    "detail": "Absolute path bắt đầu từ /. Relative path bắt đầu ở working directory. Dấu / chia các cấp; . là hiện tại, .. là cha. Địa chỉ đúng vẫn có thể bị chặn vì quyền truy cập. Dấu ~ không phải một thư mục tương đối: Bash mở rộng nó thành home trước khi thực hiện lệnh.",
     "example": "Tại /home/student, docs/a.txt dẫn tới /home/student/docs/a.txt.",
     "related": ["filesystem", "working-directory", "permission"]
   },
@@ -139,7 +139,7 @@
     "id": "signal",
     "term": "Signal",
     "short": "Thông báo hệ điều hành gửi tới process.",
-    "detail": "TERM yêu cầu kết thúc và cho cơ hội xử lý dọn dẹp; chương trình có thể bỏ qua nên phải verify. KILL cưỡng chế không cho xử lý dọn dẹp. Ctrl+C thường gửi INT tới nhóm foreground. Kill là tên lệnh gửi signal, không xóa file.",
+    "detail": "TERM yêu cầu kết thúc và cho cơ hội xử lý dọn dẹp; chương trình có thể bỏ qua nên phải verify. KILL cưỡng chế không cho xử lý dọn dẹp. Ctrl+C thường gửi INT tới nhóm foreground. Kill là tên lệnh gửi signal, không xóa file. Ctrl+C thường gửi SIGINT tới nhóm process foreground; nhiều chương trình dừng nhưng có thể xử lý tín hiệu khác. Luôn kiểm lại trạng thái.",
     "example": "kill -TERM PID sau khi thay PID bằng số server lab đã kiểm.",
     "related": ["pid", "process", "program"]
   },

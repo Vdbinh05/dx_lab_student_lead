@@ -87,7 +87,7 @@ ps aux
 | %MEM | Tỷ lệ bộ nhớ vật lý process đang chiếm theo cách công cụ đo; không phải dung lượng disk |
 | COMMAND | Lệnh/đối số giúp nhận diện đúng công việc |
 
-Quay lại A, nhấn **Ctrl+C**: shell gửi yêu cầu ngắt SIGINT cho nhóm foreground. Chạy `ps aux` ở B lần nữa để kiểm dòng biến mất. **COMMON FAILURE:** nhiều `sleep 300` giống nhau → không đoán PID rồi kill; Ctrl+C tại A chỉ kết thúc công việc foreground mình vừa tạo. Trong DX-Lab, PID/command/user giúp phân biệt backend thử nghiệm với chương trình khác.
+Quay lại A, nhấn **Ctrl+C**: terminal thường gửi tín hiệu ngắt SIGINT cho nhóm process foreground. Nhiều chương trình tương tác dừng khi nhận tín hiệu này, nhưng chương trình có thể xử lý khác; Ctrl+C không bảo đảm mọi chương trình dừng ngay. Chạy `ps aux` ở B lần nữa để kiểm dòng biến mất. **COMMON FAILURE:** nhiều `sleep 300` giống nhau → không đoán PID rồi kill; Ctrl+C tại A chỉ kết thúc công việc foreground mình vừa tạo. Trong DX-Lab, PID/command/user giúp phân biệt backend thử nghiệm với chương trình khác.
 
 ```teaching
 TÔI CHƯA HIỂU — program và process
@@ -365,3 +365,30 @@ Quiz 10 câu ở bảng Gate ≥70%. **PASS Gate** giữ Mission 2 prerequisite,
 ### GIẢI THÍCH CHO MỘT NGƯỜI CHƯA HỌC IT
 
 Trong 3–5 câu, giải thích “process là gì”, dùng ví dụ một chỉ dẫn và một lần thực hiện. Nói điều gì mất khi dừng, điều gì còn, và vì sao nhìn thấy process chưa chứng minh người dùng được phục vụ đúng.
+
+
+### Kiểm tra hành động bằng DX-Verify — pilot V3
+
+Sau lab, tạo chỗ giữ bằng chứng trong **WSL / Ubuntu**:
+
+```bash
+mkdir -p ~/dx-lab-practice/week1/m3/evidence
+```
+
+`-p` tạo thư mục nếu thiếu; thường không in gì. Kiểm bằng `ls -ld ~/dx-lab-practice/week1/m3/evidence`: `-d` xem chính thư mục, không liệt kê bên trong. Dòng bắt đầu `d` cho biết đó là directory. Nếu lỗi, kiểm từng cấp path bằng `pwd` và `ls` trước khi thử lại.
+
+Lưu ba file chữ bằng trình soạn thảo bạn đang dùng, tại `m3/evidence`: `process.txt` chứa phần quan sát PID/user/command trước và sau dừng; `log.txt` chứa các dòng log lab tương ứng; `incident.txt` chứa báo cáo chín bước của bạn. Chỉ lấy dấu vết server lab, bỏ dữ liệu riêng của chương trình khác. Không cần để server tiếp tục chạy. File rỗng chưa phải bằng chứng.
+
+**Chạy ở đâu:** Ubuntu, từ thư mục repository Training OS (thư mục chứa `scripts/dx-verify.py`), không phải từ thư mục bài tập. Nếu repo nằm ở ổ D như bản cài này, dùng `cd "/mnt/d/DX OS/my_web_dx_lab_student_lead"`; dấu nháy giữ đường dẫn có khoảng trắng. `ls scripts/dx-verify.py` kiểm đúng file trước khi chạy. Nếu repo ở nơi khác, dùng đường dẫn thật của repo; không đoán.
+
+```bash
+python3 scripts/dx-verify.py week-01 mission-03
+```
+
+`python3` chạy script verifier của repo; hai đối số chọn đúng tuần/bài. Script chỉ xem metadata (loại file, kích thước, quyền) tại các đường dẫn lab cố định; không đọc nội dung file, không chạy script bạn viết và không gửi dữ liệu qua mạng. Không dùng sudo. Nếu `python3` chưa có, xem bước chuẩn bị công cụ trong [Mission 3](/learn/week-01/mission-03#section-1).
+
+**Đọc kết quả:** `checks` là từng phép kiểm; `status: pass` là thấy dấu vết mong đợi; `fail` là thiếu hoặc khác trạng thái yêu cầu. `overall` chỉ pass khi mọi check pass. Lệnh trả mã 1 nếu có fail — đó là kết quả kiểm, không phải yêu cầu cài lại máy. Kiểm file tương ứng bằng `ls` / `stat`, sửa đúng bài tập rồi chạy lại. Không sửa JSON để đổi fail thành pass.
+
+Copy toàn bộ JSON từ dấu `{` đến `}` vào **DX-Verify · Action evidence** ở cuối trang, chọn **Lưu verification report**. Report không chứa tên tài khoản, path tuyệt đối, PID hay nội dung file. Đây là báo cáo tự nộp từ máy bạn, có thể bị sửa; nó không thay thế output thật, tự giải thích, quiz hay gate. Verifier không chứng minh nguyên nhân lỗi hoặc bạn đã tự làm.
+
+**Nhớ lại ngày mai:** vào [Today](/today), trả lời warm-up trước khi mở đáp án. Nếu chưa nhớ, chọn 1 ngày; nếu khó, 3 ngày; nhớ đúng liên tiếp được hẹn 7 → 14 → 30 ngày. Không cần ôn nội dung chưa học.
