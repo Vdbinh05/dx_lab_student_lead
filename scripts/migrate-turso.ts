@@ -8,6 +8,7 @@ const migrations = [
   "20260827193000_init",
   "20260827203000_harden_progress",
   "20260827221500_full_roadmap_state",
+  "20260915090000_recall_review",
 ] as const;
 
 const expectedTables = [
@@ -21,6 +22,7 @@ const expectedTables = [
   "MissionProgress",
   "OralReflection",
   "QuizAttempt",
+  "RecallReview",
   "SkillProgress",
   "WeeklyProgress",
 ] as const;
@@ -65,6 +67,20 @@ async function main() {
       throw new Error(
         "Remote schema already contains application tables without DX-Lab migration history.",
       );
+    }
+
+    const onlyPending = process.argv
+      .find((arg) => arg.startsWith("--only-pending="))
+      ?.split("=")[1];
+    if (onlyPending) {
+      const pending = migrations.filter((name) => !applied.has(name));
+      if (
+        !migrations.some((name) => name === onlyPending) ||
+        pending.some((name) => name !== onlyPending)
+      )
+        throw new Error(
+          "Unexpected pending migration; refusing to change the production schema.",
+        );
     }
 
     const newlyApplied: string[] = [];

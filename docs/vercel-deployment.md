@@ -83,3 +83,24 @@ Attach a custom hostname only when the exact hostname is known. Vercel provides 
 - Schema absent: apply all migration SQL files in order, then verify `.tables` and indexes.
 - Seed absent: run `npm run db:seed` once with Turso variables configured.
 - Local migrations targeting the wrong database: ensure `LOCAL_DATABASE_URL` is a `file:` URL and unset Turso variables for ordinary local development.
+
+## v0.3.0 release preparation — 2026-09-16
+
+Release preparation is on `refactor/learning-architecture-v3`. Production has **not** been upgraded yet. The additive `20260915090000_recall_review` migration creates only RecallReview; v0.2.0 continues to use its existing tables. No seed/reset is required.
+
+Before production changes, export and validate `/api/backup`, retain a private snapshot of existing table/schema/migration-history data, and pass QA including Docker smoke. Run the existing migration runner with production-scoped environment injection and a pending-migration guard:
+
+```powershell
+npx vercel env run --environment=production -- npm run db:migrate:turso -- --only-pending=20260915090000_recall_review
+npx vercel env run --environment=production -- npm run db:verify
+```
+
+The guard refuses unexpected pending migrations. Verify pre-existing learner rows are unchanged and the still-deployed v0.2.0 health endpoint succeeds before merging main. `db:verify` tests isolated normal writes plus RecallReview, cleans its probes, and never seeds. Existing recall rows are not altered by its probe.
+
+v0.3.0 backup export includes optional incidentAssistance as well as recallReviews. New restores preserve hint levels exactly; old exports that omit incidentAssistance leave current hints intact rather than erasing assistance. Keep the original v0.2.0 export for application rollback; old application code rejects new backup fields. No reverse schema migration should be used for an application rollback.
+
+Docker smoke now uses a unique Compose project as well as a unique volume, preventing it from replacing an existing learner container. The smoke performs destructive reset only inside that isolated test volume.
+
+After database verification: commit release preparation, push the feature branch, fetch, merge into current main, and push main to trigger the existing Vercel project. Verify Ready and exact Git commit, health version 0.3.0, routes, feature persistence and cleanup. Only then create/push annotated v0.3.0. Production readiness does not establish Teaching Gold Standard; M1–M3 still need learner review.
+
+Docker smoke and Vercel authentication now PASS. The additive production migration and data-preservation probes PASS; main deployment and live verification are pending. Detailed status and backup references are in `docs/release-v0.3.0.md`.

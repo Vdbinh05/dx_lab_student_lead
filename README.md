@@ -22,7 +22,7 @@ Reading does not award competency. A mission passes only after its operational s
 | 7    | Agent tools, service auth, HITL, audit and red-team                   |        7 |
 | 8    | Regression, configuration freeze, fresh machine, release and Mock OLP |        7 |
 
-The product contains 57 missions, 285 mission questions, 160 weekly questions, eight scenario Boss Fights, 50 tracked skills, and 24 oral-defense prompts. Every future week can be read, but mutations and PASS remain locked until the previous weekly gate passes.
+The product contains 57 missions, 300 mission questions (including the three Teaching V2 pilot quizzes), 160 weekly questions, eight scenario Boss Fights, 50 tracked skills, and 24 oral-defense prompts. Every future week can be read, but mutations and PASS remain locked until the previous weekly gate passes.
 
 ## Architecture
 
@@ -34,6 +34,10 @@ The product contains 57 missions, 285 mission questions, 160 weekly questions, e
 - No authentication, cloud dependency, external search service, AI chat, or background worker.
 
 See [docs/architecture.md](docs/architecture.md), [docs/security.md](docs/security.md), and [docs/curriculum-audit.md](docs/curriculum-audit.md).
+
+## Learning Architecture V3 pilot
+
+Branch-only learner review: [architecture and local migration/rollback](docs/learning-architecture-v3.md), [implementation and QA](docs/learning-v3-implementation-report.md). Scheduled recall and local M1–M3 verification preserve Teaching V2 and existing gates. Production remains v0.2.0; do not deploy this branch against an unmigrated database.
 
 ## Local setup
 

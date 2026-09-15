@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: dx-lab-sv1-training-os:0.2.0
+    image: dx-lab-sv1-training-os:0.3.0
     init: true
     restart: unless-stopped
     environment:

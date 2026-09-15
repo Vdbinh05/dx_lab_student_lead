@@ -14,6 +14,7 @@ for (const migration of [
   "prisma/migrations/20260827193000_init/migration.sql",
   "prisma/migrations/20260827203000_harden_progress/migration.sql",
   "prisma/migrations/20260827221500_full_roadmap_state/migration.sql",
+    "prisma/migrations/20260915090000_recall_review/migration.sql",
 ])
   sqlite.exec(readFileSync(migration, "utf8"));
 sqlite.close();

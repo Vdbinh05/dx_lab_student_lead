@@ -84,7 +84,8 @@ export default async function IncidentPage({
             AVAILABLE TO READ · LOCKED FOR PASS
           </div>
           <p className="mt-1">
-            Scenario and known facts are readable. Assistance and attempts unlock after the previous Week Gate passes.
+            Scenario and known facts are readable. Assistance and attempts
+            unlock after the previous Week Gate passes.
           </p>
         </section>
       )}
@@ -101,28 +102,64 @@ export default async function IncidentPage({
           {passUnlocked ? (
             <ValidatedForm formAction={submitIncidentFormAction}>
               <input type="hidden" name="incidentId" value={id} />
-              <div className="grid gap-4 md:grid-cols-2">
-                {fields.map(([name, label, placeholder]) => (
-                  <label
-                    key={name}
-                    className={
-                      "block text-xs font-bold text-[#96a4b2] " +
-                      (name === "evidence" || name === "regression"
-                        ? "md:col-span-2"
-                        : "")
-                    }
-                  >
-                    {label}
-                    <textarea
-                      name={name}
-                      className="field mt-2 min-h-28 resize-y font-normal"
-                      minLength={12}
-                      required
-                      placeholder={placeholder}
-                    />
-                  </label>
-                ))}
-              </div>
+              <p className="mb-5 text-sm leading-6 text-[#a7b2bf]">
+                Thu bằng chứng trước khi đoán nguyên nhân. Sau khi sửa, chạy lại
+                phép kiểm; cuối cùng kiểm tra hành vi khác để phát hiện lỗi mới.
+              </p>
+              {[
+                {
+                  title: "1. SYMPTOM",
+                  help: "Bạn nhìn thấy gì? Ghi lỗi cụ thể, chưa kết luận nguyên nhân.",
+                  names: ["symptom"],
+                },
+                {
+                  title: "2. DIAGNOSTICS",
+                  help: "Bằng chứng → giả thuyết → phép thử → kết quả. Mỗi lần chỉ kiểm một giả thuyết.",
+                  names: ["evidence", "hypothesis", "test", "result"],
+                },
+                {
+                  title: "3. ROOT CAUSE",
+                  help: "Kết quả nào chứng minh nguyên nhân? Nếu chưa đủ, quay lại phép thử.",
+                  names: ["rootCause"],
+                },
+                {
+                  title: "4. RESOLUTION",
+                  help: "Sửa tối thiểu, chứng minh lỗi hết, rồi kiểm hành vi khác còn đúng.",
+                  names: ["fix", "verification", "regression"],
+                },
+              ].map((group) => (
+                <fieldset
+                  key={group.title}
+                  className="mb-6 rounded-lg border border-[#344151] p-4"
+                >
+                  <legend className="px-2 font-bold text-[#72e4de]">
+                    {group.title}
+                  </legend>
+                  <p className="mb-4 text-sm text-[#a7b2bf]">{group.help}</p>
+                  <div className="space-y-4">
+                    {fields
+                      .filter(([name]) => group.names.includes(name))
+                      .map(([name, label, placeholder]) => (
+                        <label
+                          key={name}
+                          className="block text-xs font-bold text-[#a7b2bf]"
+                        >
+                          {label}
+                          <span className="mt-1 block font-normal">
+                            {placeholder}
+                          </span>
+                          <textarea
+                            name={name}
+                            className="field mt-2 min-h-24 resize-y font-normal"
+                            minLength={12}
+                            required
+                            placeholder={placeholder}
+                          />
+                        </label>
+                      ))}
+                  </div>
+                </fieldset>
+              ))}
               {assistanceRank >= 3 && (
                 <div className="mt-6 border border-[#654938] bg-[#261c14] p-4 text-sm leading-6 text-[#dfa46e]">
                   <strong>Solution key:</strong> {definition.solution}
@@ -130,7 +167,9 @@ export default async function IncidentPage({
               )}
               <div className="mt-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
                 <p className="max-w-lg text-xs leading-5 text-[#798694]">
-                  CLEAN PASS requires all nine protocol fields, incident-specific diagnosis and command evidence, verification, regression, and no assistance.
+                  CLEAN PASS requires all nine protocol fields,
+                  incident-specific diagnosis and command evidence,
+                  verification, regression, and no assistance.
                 </p>
                 <SubmitButton>Nộp attempt</SubmitButton>
               </div>
@@ -145,7 +184,8 @@ export default async function IncidentPage({
           <section className="card p-5">
             <div className="eyebrow">Hints</div>
             <p className="mt-2 text-xs leading-5 text-[#7f8c9a]">
-              Assistance is persisted server-side. Opening any hint makes the current attempt assisted and ineligible for CLEAN PASS.
+              Assistance is persisted server-side. Opening any hint makes the
+              current attempt assisted and ineligible for CLEAN PASS.
             </p>
             {(["HINT_1", "HINT_2", "SOLUTION"] as const).map((level, index) => (
               <div key={level}>
@@ -158,7 +198,9 @@ export default async function IncidentPage({
                     type="submit"
                     disabled={!passUnlocked}
                   >
-                    {level === "SOLUTION" ? "Reveal solution" : "Open Hint " + (index + 1)}
+                    {level === "SOLUTION"
+                      ? "Reveal solution"
+                      : "Open Hint " + (index + 1)}
                   </button>
                 </form>
                 {assistanceRank >= index + 1 && level !== "SOLUTION" && (
@@ -176,7 +218,9 @@ export default async function IncidentPage({
             <div className="eyebrow">Attempt history</div>
             <div className="mt-3 space-y-2">
               {attempts.length === 0 ? (
-                <p className="text-sm text-[#7f8c9a]">No attempts. No synthetic PASS.</p>
+                <p className="text-sm text-[#7f8c9a]">
+                  No attempts. No synthetic PASS.
+                </p>
               ) : (
                 attempts.map((item) => (
                   <div
@@ -200,6 +244,20 @@ export default async function IncidentPage({
                     </div>
                     <div className="mt-1 opacity-70">
                       {item.createdAt.toLocaleString("vi-VN")}
+                      <details className="mt-3">
+                        <summary className="cursor-pointer py-2">
+                          Đọc attempt
+                        </summary>
+                        {fields.map(([name, label]) => (
+                          <p
+                            key={name}
+                            className="mt-3 whitespace-pre-wrap break-words"
+                          >
+                            <strong>{label}: </strong>
+                            {item[name]}
+                          </p>
+                        ))}
+                      </details>
                     </div>
                   </div>
                 ))

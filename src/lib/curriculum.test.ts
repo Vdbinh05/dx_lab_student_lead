@@ -22,10 +22,25 @@ describe("Week 1 curriculum structure and roadmap coverage", () => {
       missions.every((mission) => mission.week === 1 && mission.hardGate),
     ).toBe(true);
   });
-  it("keeps all 16 required sections and the nine-step incident protocol", () => {
+  it("keeps V1 sections, V2 learning scaffolding and the nine-step incident protocol", () => {
     for (const mission of missions) {
-      for (let section = 1; section <= 16; section += 1)
-        expect(mission.content).toMatch(new RegExp(`## ${section}\\.`));
+      if (mission.order <= 3) {
+        for (const section of [
+          "TRƯỚC KHI HỌC BÀI NÀY",
+          "LAB 1",
+          "LAB 2",
+          "LAB 3",
+          "TÔI CHƯA HIỂU",
+          "SHOW KEY POINTS",
+          "Evidence Required",
+          "PASS Gate",
+          "GIẢI THÍCH CHO MỘT NGƯỜI CHƯA HỌC IT",
+        ])
+          expect(mission.content).toContain(section);
+      } else {
+        for (let section = 1; section <= 16; section += 1)
+          expect(mission.content).toMatch(new RegExp(`## ${section}\\.`));
+      }
       for (const token of [
         "SYMPTOM",
         "EVIDENCE",

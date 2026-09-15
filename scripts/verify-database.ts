@@ -43,6 +43,34 @@ async function main() {
   }
 
   try {
+    const recallId = `${availableMission.id}:${availableMission.quiz[0].id}`;
+    const existingRecall = await prisma.recallReview.findUnique({
+      where: { id: recallId },
+    });
+    // Existing learner schedules are never modified by this probe.
+    if (!existingRecall) {
+      const now = new Date();
+      try {
+        await prisma.recallReview.create({
+          data: {
+            id: recallId,
+            lastReviewedAt: now,
+            nextReviewAt: new Date(now.getTime() + 86400000),
+            reviewCount: 1,
+            streak: 0,
+            rating: "wrong",
+          },
+        });
+        if (
+          !(await prisma.recallReview.findUnique({ where: { id: recallId } }))
+        )
+          throw new Error("Recall verification write was not readable.");
+      } finally {
+        await prisma.recallReview.deleteMany({
+          where: { id: recallId, reviewCount: 1, lastReviewedAt: now },
+        });
+      }
+    }
     await prisma.evidence.create({
       data: {
         id: `${probeId}-evidence`,
@@ -117,6 +145,7 @@ async function main() {
         quiz: true,
         note: true,
         bookmark: true,
+        recall: true,
         backup: true,
       }),
     );
