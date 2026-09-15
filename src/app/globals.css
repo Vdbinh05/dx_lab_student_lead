@@ -209,7 +209,7 @@ button {
   border-color: #52647a;
   background: #182230;
 }
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
   .desktop-sidebar {
     display: none;
   }
