@@ -94,7 +94,7 @@ Screenshots/output stay in ignored artifacts/learning-v3 and artifacts/teaching-
 
 # 11. Git
 
-Branch remains refactor/learning-architecture-v3, based on 2d479ad. Logical commits cover architecture, implementation and pilot/QA documentation. Final commit IDs and confirmed push outcome appear in the task completion response. Target: origin/refactor/learning-architecture-v3. No force push, merge, release or tag.
+Branch remains refactor/learning-architecture-v3, based on 2d479ad. Commits: bf80461 (architecture), 0c2df37 (navigation/incidents), 5aac5d7 (recall/verifier/QA), d686072 (pilot content/report). Worktree clean after commits. Push to origin/refactor/learning-architecture-v3 was attempted but blocked by missing GitHub credentials: “could not read Username for https://github.com”; noninteractive retry confirmed no usable login. GitHub CLI is unavailable. User authentication is required, then retry the normal push. No force push, merge, release or tag.
 
 # 12. Production
 
@@ -106,4 +106,6 @@ M1–M3 require real learner A/B/C/D feedback, first confusing phrase, any core 
 
 # 14. FINAL STATUS
 
-LEARNING ARCHITECTURE V3 READY FOR LEARNER REVIEW: YES
+Implementation and local QA are complete. Outstanding task blocker: authenticate Git with GitHub and complete the required branch push. No software/teaching QA blocker identified.
+
+LEARNING ARCHITECTURE V3 READY FOR LEARNER REVIEW: NO
