@@ -129,6 +129,56 @@ describe("versioned learner backup", () => {
     );
   });
 
+  it("preserves incident assistance in new and legacy restores", async () => {
+    await prisma.incidentAssistance.create({
+      data: { incidentId: "net-01", level: "HINT_1" },
+    });
+    const exported = await createLearnerBackup(prisma);
+    await prisma.incidentAssistance.update({
+      where: { incidentId: "net-01" },
+      data: { level: "HINT_2" },
+    });
+    await importLearnerBackup(
+      prisma,
+      parseLearnerBackup(
+        JSON.stringify({ ...exported, incidentAssistance: undefined }),
+      ),
+    );
+    expect(
+      (
+        await prisma.incidentAssistance.findUnique({
+          where: { incidentId: "net-01" },
+        })
+      )?.level,
+    ).toBe("HINT_2");
+    await importLearnerBackup(
+      prisma,
+      parseLearnerBackup(JSON.stringify(exported)),
+    );
+    expect(
+      (
+        await prisma.incidentAssistance.findUnique({
+          where: { incidentId: "net-01" },
+        })
+      )?.level,
+    ).toBe("HINT_1");
+    expect(() =>
+      parseLearnerBackup(
+        JSON.stringify({
+          ...exported,
+          incidentAssistance: [
+            {
+              incidentId: "unknown",
+              level: "HINT_1",
+              updatedAt: new Date().toISOString(),
+            },
+          ],
+        }),
+      ),
+    ).toThrow();
+    await prisma.incidentAssistance.deleteMany();
+  });
+
   it("round-trips recall and accepts old backups without it", async () => {
     const id =
       "w1-m1-linux-orientation:" +

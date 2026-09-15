@@ -21,6 +21,18 @@ const nullableDate = date.nullable();
 
 export const learnerBackupSchema = z
   .object({
+    incidentAssistance: z
+      .array(
+        z
+          .object({
+            incidentId: id,
+            level: z.enum(["NONE", "HINT_1", "HINT_2", "SOLUTION"]),
+            updatedAt: date,
+          })
+          .strict(),
+      )
+      .max(8)
+      .optional(),
     recallReviews: z.array(recallReviewSchema).max(1000).default([]),
     format: z.literal("dx-lab-sv1-learner-backup"),
     schemaVersion: z.literal(1),
@@ -178,6 +190,7 @@ export async function createLearnerBackup(
   prisma: PrismaClient,
 ): Promise<LearnerBackup> {
   const [
+    incidentAssistance,
     recallReviews,
     learnerProfile,
     missionProgress,
@@ -191,6 +204,7 @@ export async function createLearnerBackup(
     weeklyProgress,
     oralReflections,
   ] = await Promise.all([
+    prisma.incidentAssistance.findMany(),
     prisma.recallReview.findMany(),
     prisma.learnerProfile.upsert({
       where: { id: "local-learner" },
@@ -213,6 +227,10 @@ export async function createLearnerBackup(
     prisma.oralReflection.findMany(),
   ]);
   return learnerBackupSchema.parse({
+    incidentAssistance: incidentAssistance.map((row) => ({
+      ...row,
+      updatedAt: row.updatedAt.toISOString(),
+    })),
     recallReviews: recallReviews.map((row) => ({
       ...row,
       lastReviewedAt: row.lastReviewedAt.toISOString(),
@@ -302,6 +320,14 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
     if (new Set(values).size !== values.length)
       throw new Error(`Backup chứa ${label} trùng lặp`);
   };
+  assertUnique(
+    backup.incidentAssistance ?? [],
+    (row) => row.incidentId,
+    "incident assistance",
+  );
+  for (const row of backup.incidentAssistance ?? [])
+    if (!incidentIds.has(row.incidentId))
+      throw new Error("Backup chứa incident assistance không tồn tại");
   assertUnique(backup.recallReviews, (row) => row.id, "recall ID");
   const recallIds = new Set(recallItems(missions).map((item) => item.id));
   for (const row of backup.recallReviews)
@@ -424,7 +450,17 @@ export async function importLearnerBackup(
     await transaction.weeklyProgress.deleteMany();
     await transaction.bookmark.deleteMany();
     await transaction.missionNote.deleteMany();
-    await transaction.incidentAssistance.deleteMany();
+    // Legacy backups omitted current hint state. Preserve it rather than erase assistance.
+    if (backup.incidentAssistance !== undefined) {
+      await transaction.incidentAssistance.deleteMany();
+      if (backup.incidentAssistance.length)
+        await transaction.incidentAssistance.createMany({
+          data: backup.incidentAssistance.map((row) => ({
+            ...row,
+            updatedAt: new Date(row.updatedAt),
+          })),
+        });
+    }
     await transaction.incidentAttempt.deleteMany();
     await transaction.quizAttempt.deleteMany();
     await transaction.evidence.deleteMany();

@@ -14,6 +14,7 @@ if (volumeName === "dx_lab_sv1_training_data")
 const baseUrl = `http://127.0.0.1:${port}`;
 const environment = {
   ...process.env,
+  COMPOSE_PROJECT_NAME: volumeName,
   APP_PORT: String(port),
   TRAINING_VOLUME_NAME: volumeName,
 };
