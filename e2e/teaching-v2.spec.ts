@@ -44,7 +44,7 @@ for (const width of [1440, 390]) {
             .filter((href) => !document.getElementById(href.slice(1))),
         );
       expect(brokenAnchors).toEqual([]);
-      await page.locator('a[href="#section-2"]').click();
+      await page.locator('article a[href="#section-2"]').first().click();
       await expect(page.locator("#section-2")).toBeInViewport();
       expect(
         await page.evaluate(

@@ -26,6 +26,7 @@ beforeAll(async () => {
     "prisma/migrations/20260827193000_init/migration.sql",
     "prisma/migrations/20260827203000_harden_progress/migration.sql",
     "prisma/migrations/20260827221500_full_roadmap_state/migration.sql",
+    "prisma/migrations/20260915090000_recall_review/migration.sql",
   ])
     sqlite.exec(readFileSync(migration, "utf8"));
   sqlite.close();
@@ -47,6 +48,7 @@ describe("versioned learner backup", () => {
       "prisma/migrations/20260827193000_init/migration.sql",
       "prisma/migrations/20260827203000_harden_progress/migration.sql",
       "prisma/migrations/20260827221500_full_roadmap_state/migration.sql",
+      "prisma/migrations/20260915090000_recall_review/migration.sql",
     ]) {
       const statements = readFileSync(migration, "utf8")
         .replace(/^--.*$/gm, "")
@@ -125,6 +127,41 @@ describe("versioned learner backup", () => {
     expect(() => parseLearnerBackup(JSON.stringify(exported))).toThrow(
       "Backup chứa mission không tồn tại",
     );
+  });
+
+  it("round-trips recall and accepts old backups without it", async () => {
+    const id =
+      "w1-m1-linux-orientation:" +
+      (await import("./curriculum")).getAllMissions()[0].quiz[0].id;
+    await prisma.recallReview.create({
+      data: {
+        id,
+        lastReviewedAt: new Date("2026-09-15T08:00:00Z"),
+        nextReviewAt: new Date("2026-09-22T08:00:00Z"),
+        reviewCount: 1,
+        streak: 1,
+        rating: "correct",
+      },
+    });
+    const backup = await createLearnerBackup(prisma);
+    await importLearnerBackup(
+      prisma,
+      parseLearnerBackup(JSON.stringify(backup)),
+    );
+    expect(
+      (await prisma.recallReview.findUnique({ where: { id } }))?.streak,
+    ).toBe(1);
+    const old = { ...backup, recallReviews: undefined };
+    expect(parseLearnerBackup(JSON.stringify(old)).recallReviews).toEqual([]);
+    expect(() =>
+      parseLearnerBackup(
+        JSON.stringify({
+          ...backup,
+          recallReviews: [backup.recallReviews[0], backup.recallReviews[0]],
+        }),
+      ),
+    ).toThrow();
+    await prisma.recallReview.deleteMany();
   });
 
   it("accepts known legacy skill rows so Week 1 backups remain restorable", async () => {

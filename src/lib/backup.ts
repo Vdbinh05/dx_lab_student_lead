@@ -1,3 +1,4 @@
+import { recallItems, recallReviewSchema } from "@/lib/recall";
 import { z } from "zod";
 import type { PrismaClient } from "@/generated/prisma/client";
 import { applicationVersion } from "@/lib/app-version";
@@ -20,6 +21,7 @@ const nullableDate = date.nullable();
 
 export const learnerBackupSchema = z
   .object({
+    recallReviews: z.array(recallReviewSchema).max(1000).default([]),
     format: z.literal("dx-lab-sv1-learner-backup"),
     schemaVersion: z.literal(1),
     applicationVersion: z.string().min(1).max(40),
@@ -111,9 +113,10 @@ export const learnerBackupSchema = z
       .object({
         id: z.literal("local-settings"),
         acceleratedMode: z.boolean(),
-        dailyStudyMinutes: z.number().int().refine((value) =>
-          [120, 240, 360, 480].includes(value),
-        ),
+        dailyStudyMinutes: z
+          .number()
+          .int()
+          .refine((value) => [120, 240, 360, 480].includes(value)),
         currentWeek: z.number().int().min(1).max(8),
         currentMission: id,
       })
@@ -171,8 +174,11 @@ function toIso(value: Date | null) {
   return value?.toISOString() ?? null;
 }
 
-export async function createLearnerBackup(prisma: PrismaClient): Promise<LearnerBackup> {
+export async function createLearnerBackup(
+  prisma: PrismaClient,
+): Promise<LearnerBackup> {
   const [
+    recallReviews,
     learnerProfile,
     missionProgress,
     evidence,
@@ -185,6 +191,7 @@ export async function createLearnerBackup(prisma: PrismaClient): Promise<Learner
     weeklyProgress,
     oralReflections,
   ] = await Promise.all([
+    prisma.recallReview.findMany(),
     prisma.learnerProfile.upsert({
       where: { id: "local-learner" },
       update: {},
@@ -206,6 +213,11 @@ export async function createLearnerBackup(prisma: PrismaClient): Promise<Learner
     prisma.oralReflection.findMany(),
   ]);
   return learnerBackupSchema.parse({
+    recallReviews: recallReviews.map((row) => ({
+      ...row,
+      lastReviewedAt: row.lastReviewedAt.toISOString(),
+      nextReviewAt: row.nextReviewAt.toISOString(),
+    })),
     format: "dx-lab-sv1-learner-backup",
     schemaVersion: 1,
     applicationVersion,
@@ -221,7 +233,10 @@ export async function createLearnerBackup(prisma: PrismaClient): Promise<Learner
       completedAt: toIso(row.completedAt),
       updatedAt: row.updatedAt.toISOString(),
     })),
-    evidence: evidence.map((row) => ({ ...row, createdAt: row.createdAt.toISOString() })),
+    evidence: evidence.map((row) => ({
+      ...row,
+      createdAt: row.createdAt.toISOString(),
+    })),
     quizAttempts: quizAttempts.map((row) => ({
       ...row,
       createdAt: row.createdAt.toISOString(),
@@ -287,6 +302,11 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
     if (new Set(values).size !== values.length)
       throw new Error(`Backup chứa ${label} trùng lặp`);
   };
+  assertUnique(backup.recallReviews, (row) => row.id, "recall ID");
+  const recallIds = new Set(recallItems(missions).map((item) => item.id));
+  for (const row of backup.recallReviews)
+    if (!recallIds.has(row.id))
+      throw new Error("Backup chứa recall không tồn tại");
   assertUnique(backup.missionProgress, (row) => row.id, "mission progress ID");
   assertUnique(backup.evidence, (row) => row.id, "evidence ID");
   assertUnique(backup.quizAttempts, (row) => row.id, "quiz attempt ID");
@@ -295,14 +315,22 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
   assertUnique(backup.notes, (row) => row.id, "note ID");
   assertUnique(backup.bookmarks, (row) => row.id, "bookmark ID");
   assertUnique(backup.oralReflections, (row) => row.id, "oral reflection ID");
-  assertUnique(backup.missionProgress, (row) => row.missionId, "mission progress");
+  assertUnique(
+    backup.missionProgress,
+    (row) => row.missionId,
+    "mission progress",
+  );
   assertUnique(backup.notes, (row) => row.missionId, "mission note");
   assertUnique(
     backup.bookmarks,
     (row) => `${row.targetType}:${row.targetId}`,
     "bookmark target",
   );
-  assertUnique(backup.weeklyProgress, (row) => String(row.week), "weekly progress");
+  assertUnique(
+    backup.weeklyProgress,
+    (row) => String(row.week),
+    "weekly progress",
+  );
 
   for (const row of backup.missionProgress)
     if (!missionIds.has(row.missionId))
@@ -312,7 +340,9 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
       try {
         steps = JSON.parse(row.completedSteps) as unknown;
       } catch {
-        throw new Error(`Mission progress có completedSteps không hợp lệ: ${row.missionId}`);
+        throw new Error(
+          `Mission progress có completedSteps không hợp lệ: ${row.missionId}`,
+        );
       }
       if (
         !Array.isArray(steps) ||
@@ -322,11 +352,15 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
             !(missionSteps as readonly string[]).includes(step),
         )
       )
-        throw new Error(`Mission progress có completedSteps không hợp lệ: ${row.missionId}`);
+        throw new Error(
+          `Mission progress có completedSteps không hợp lệ: ${row.missionId}`,
+        );
     }
   for (const row of backup.evidence)
     if (!missionIds.has(row.missionId))
-      throw new Error(`Evidence trỏ tới mission không tồn tại: ${row.missionId}`);
+      throw new Error(
+        `Evidence trỏ tới mission không tồn tại: ${row.missionId}`,
+      );
     else if (row.skillId && !skillIds.has(row.skillId))
       throw new Error(`Evidence trỏ tới skill không tồn tại: ${row.skillId}`);
   for (const row of backup.notes)
@@ -334,17 +368,24 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
       throw new Error(`Note trỏ tới mission không tồn tại: ${row.missionId}`);
   for (const row of backup.quizAttempts)
     if (!validMissionReference(row.missionId))
-      throw new Error(`Quiz trỏ tới curriculum không tồn tại: ${row.missionId}`);
+      throw new Error(
+        `Quiz trỏ tới curriculum không tồn tại: ${row.missionId}`,
+      );
   for (const row of backup.incidentAttempts)
     if (!incidentIds.has(row.incidentId))
       throw new Error(`Incident không tồn tại: ${row.incidentId}`);
   for (const row of backup.skillProgress)
-    if (!skillIds.has(row.id)) throw new Error(`Skill không tồn tại: ${row.id}`);
+    if (!skillIds.has(row.id))
+      throw new Error(`Skill không tồn tại: ${row.id}`);
   for (const row of backup.bookmarks) {
     if (row.targetType === "mission" && !missionIds.has(row.targetId))
-      throw new Error(`Bookmark trỏ tới mission không tồn tại: ${row.targetId}`);
+      throw new Error(
+        `Bookmark trỏ tới mission không tồn tại: ${row.targetId}`,
+      );
     if (row.targetType === "incident" && !incidentIds.has(row.targetId))
-      throw new Error(`Bookmark trỏ tới incident không tồn tại: ${row.targetId}`);
+      throw new Error(
+        `Bookmark trỏ tới incident không tồn tại: ${row.targetId}`,
+      );
     if (row.targetType === "lab") {
       const [missionId, kind, extra] = row.targetId.split(":");
       if (
@@ -357,14 +398,28 @@ export function parseLearnerBackup(raw: string): LearnerBackup {
   }
   for (const row of backup.oralReflections)
     if (oralQuestions.get(row.questionId) !== row.group)
-      throw new Error(`Oral reflection không khớp curriculum: ${row.questionId}`);
+      throw new Error(
+        `Oral reflection không khớp curriculum: ${row.questionId}`,
+      );
   if (!missionIds.has(backup.settings.currentMission))
     throw new Error("Settings.currentMission không tồn tại");
   return backup;
 }
 
-export async function importLearnerBackup(prisma: PrismaClient, backup: LearnerBackup) {
+export async function importLearnerBackup(
+  prisma: PrismaClient,
+  backup: LearnerBackup,
+) {
   await prisma.$transaction(async (transaction) => {
+    await transaction.recallReview.deleteMany();
+    if (backup.recallReviews.length)
+      await transaction.recallReview.createMany({
+        data: backup.recallReviews.map((row) => ({
+          ...row,
+          lastReviewedAt: new Date(row.lastReviewedAt),
+          nextReviewAt: new Date(row.nextReviewAt),
+        })),
+      });
     await transaction.oralReflection.deleteMany();
     await transaction.weeklyProgress.deleteMany();
     await transaction.bookmark.deleteMany();

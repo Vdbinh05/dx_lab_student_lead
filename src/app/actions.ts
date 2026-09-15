@@ -3,6 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getRecallData } from "@/lib/recall-data";
+import { recallRating, scheduleReview } from "@/lib/recall";
+import { parseVerification, verificationMissions } from "@/lib/verification";
 import { db } from "@/lib/db";
 import {
   getIncidentById,
@@ -43,6 +46,67 @@ export type FormActionState = {
   ok: boolean;
   message: string;
 };
+
+export async function importVerificationFormAction(
+  _state: FormActionState,
+  form: FormData,
+): Promise<FormActionState> {
+  try {
+    const raw = z.string().max(10000).parse(form.get("report"));
+    const report = parseVerification(raw);
+    const missionId = verificationMissions[report.missionId].missionId;
+    if (form.get("missionId") !== missionId)
+      return { ok: false, message: "Report không khớp mission đang mở." };
+    await assertMissionMutable(missionId);
+    await db.evidence.create({
+      data: {
+        missionId,
+        type: "test-result",
+        title: `DX-Verify v1 · ${report.overall.toUpperCase()} · local self-report`,
+        content: JSON.stringify(report, null, 2),
+      },
+    });
+    refreshMission(missionId);
+    return {
+      ok: true,
+      message:
+        "Đã lưu report vào Evidence Vault. Report chỉ xác nhận dấu vết; bạn vẫn cần giải thích, quiz và gate.",
+    };
+  } catch (error) {
+    return expectedActionError(error);
+  }
+}
+
+export async function reviewRecallFormAction(
+  _state: FormActionState,
+  form: FormData,
+): Promise<FormActionState> {
+  try {
+    const input = z
+      .object({ id: z.string().min(1).max(200), rating: recallRating })
+      .parse({ id: form.get("id"), rating: form.get("rating") });
+    const { items } = await getRecallData();
+    if (!items.some((item) => item.id === input.id))
+      return { ok: false, message: "Hãy học nội dung này trước khi ôn." };
+    const now = new Date();
+    await db.$transaction(async (tx) => {
+      const previous = await tx.recallReview.findUnique({
+        where: { id: input.id },
+      });
+      if (previous && previous.nextReviewAt > now) return;
+      const data = scheduleReview(previous, input.rating, now);
+      await tx.recallReview.upsert({
+        where: { id: input.id },
+        create: { id: input.id, ...data },
+        update: data,
+      });
+    });
+    revalidatePath("/today");
+    return { ok: true, message: "Đã lưu lịch ôn." };
+  } catch (error) {
+    return expectedActionError(error);
+  }
+}
 
 function expectedActionError(error: unknown): FormActionState {
   if (error instanceof z.ZodError)
@@ -458,7 +522,7 @@ export async function toggleBookmark(formData: FormData) {
   if (parsed.targetType === "lab") {
     const [missionId, kind] = parsed.targetId.split(":");
     requireMission(missionId);
-    if (!['guided', 'independent', 'integration'].includes(kind ?? ""))
+    if (!["guided", "independent", "integration"].includes(kind ?? ""))
       throw new Error("Bookmark lab không hợp lệ");
   }
   const existing = await db.bookmark.findUnique({
@@ -482,10 +546,7 @@ export async function toggleBookmark(formData: FormData) {
     revalidatePath(`/incidents/${parsed.targetId}`);
 }
 
-export async function submitWeeklyQuiz(
-  rawWeek: number,
-  formData: FormData,
-) {
+export async function submitWeeklyQuiz(rawWeek: number, formData: FormData) {
   const week = weekNumberSchema.parse(rawWeek);
   const definition = getWeek(week);
   if (!definition) throw new Error("Week không tồn tại");
@@ -541,7 +602,13 @@ export async function submitWeeklyQuizFormAction(
 export async function attemptWeekGate(rawWeek: number) {
   const week = weekNumberSchema.parse(rawWeek);
   const result = await commitWeekGate(week);
-  for (const path of ["/", "/today", "/roadmap", `/weeks/${week}/review`, "/readiness"])
+  for (const path of [
+    "/",
+    "/today",
+    "/roadmap",
+    `/weeks/${week}/review`,
+    "/readiness",
+  ])
     revalidatePath(path);
   if (result.passed) redirect(week < 8 ? `/weeks/${week + 1}` : "/readiness");
 }
@@ -571,7 +638,10 @@ export async function importBackupFormAction(
       "/settings",
     ])
       revalidatePath(path);
-    return { ok: true, message: "Backup đã được validate và import thành công." };
+    return {
+      ok: true,
+      message: "Backup đã được validate và import thành công.",
+    };
   } catch (error) {
     return expectedActionError(error);
   }

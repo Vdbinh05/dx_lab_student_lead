@@ -6,6 +6,14 @@ const databasePath = path
   .replaceAll("\\", "/");
 const databaseUrl = "file:" + databasePath;
 process.env.DATABASE_URL = databaseUrl;
+process.env.LOCAL_DATABASE_URL = databaseUrl;
+for (const key of [
+  "TURSO_DATABASE_URL",
+  "TURSO_AUTH_TOKEN",
+  "VERCEL",
+  "VERCEL_ENV",
+])
+  process.env[key] = "";
 
 export default defineConfig({
   testDir: "./e2e",

@@ -57,7 +57,7 @@ export default async function SettingsPage() {
         <div className="eyebrow">Learner-state backup</div>
         <h2 className="mt-2 text-xl font-black text-white">Export and validated import</h2>
         <p className="mt-2 text-sm leading-6 text-[#8d9aaa]">
-          Export includes progress, evidence, quiz and incident attempts, skills, settings, notes, bookmarks, week gates, and oral reflections.
+          Export includes progress, evidence, quiz and incident attempts, skills, settings, notes, bookmarks, week gates, oral reflections, and recall schedules. Older backups restore with an empty recall schedule.
         </p>
         <a href="/api/backup" download className="btn-primary mt-4">
           <Download size={15} /> Export learner backup JSON

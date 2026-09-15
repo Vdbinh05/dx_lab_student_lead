@@ -90,6 +90,7 @@ export async function seedDatabase(prisma: PrismaClient) {
 /** Destructive by design; callers must obtain explicit CLI confirmation. */
 export async function resetLearnerState(prisma: PrismaClient) {
   await prisma.$transaction([
+    prisma.recallReview.deleteMany(),
     prisma.oralReflection.deleteMany(),
     prisma.weeklyProgress.deleteMany(),
     prisma.bookmark.deleteMany(),

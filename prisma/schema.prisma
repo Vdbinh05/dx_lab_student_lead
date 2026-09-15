@@ -14,6 +14,15 @@ model LearnerProfile {
   updatedAt DateTime @updatedAt
 }
 
+model RecallReview {
+  id             String   @id
+  lastReviewedAt DateTime
+  nextReviewAt   DateTime
+  reviewCount    Int
+  streak         Int
+  rating         String
+}
+
 model MissionProgress {
   id             String    @id @default(cuid())
   missionId      String    @unique

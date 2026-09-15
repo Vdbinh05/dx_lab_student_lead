@@ -19,6 +19,7 @@ import type {
   QuizAttempt,
 } from "@/generated/prisma/client";
 import {
+  importVerificationFormAction,
   attemptMissionGate,
   clearMissionBlocker,
   reportMissionBlockerFormAction,
@@ -105,6 +106,44 @@ export function MissionWorkspace({
           <StatusBadge status={currentStatus} />
         </div>
       </div>
+      {mission.week === 1 && mission.order <= 3 && (
+        <section className="card mb-6 p-5">
+          <h2 className="font-bold text-[#72e4de]">Năm điểm tựa của bài học</h2>
+          <nav
+            aria-label="Teaching pillars"
+            className="mt-3 flex flex-wrap gap-3 text-sm text-[#a7b2bf]"
+          >
+            <a className="py-2 underline" href="#section-2">
+              WHY / REAL-LIFE METAPHOR
+            </a>
+            <a
+              className="py-2 underline"
+              href={mission.order === 3 ? "#section-2" : "#section-3"}
+            >
+              VISUAL MODEL
+            </a>
+            <a
+              className="py-2 underline"
+              href={mission.order === 1 ? "#section-5" : "#section-4"}
+            >
+              COMMAND WALKTHROUGH
+            </a>
+            <a
+              className="py-2 underline"
+              href={mission.order === 2 ? "#section-9" : "#section-8"}
+            >
+              GOTCHAS / TROUBLESHOOTING
+            </a>
+            <a className="py-2 underline" href="#verification-pilot">
+              ACTION GATE
+            </a>
+          </nav>
+          <p className="mt-2 text-sm">
+            Mỗi chặng: hiểu vì sao → dự đoán → chạy → quan sát → tự giải thích.
+            Nghỉ sau một thí nghiệm nếu cần.
+          </p>
+        </section>
+      )}
       <header className="card mb-6 overflow-hidden">
         <div className="border-b border-[#26313e] bg-[#0e141d] px-6 py-4">
           <div className="eyebrow">
@@ -160,7 +199,11 @@ export function MissionWorkspace({
                 value={"W" + mission.week + " · " + mission.title}
               />
               <button type="submit" className="btn-secondary w-full">
-                {bookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+                {bookmarked ? (
+                  <BookmarkCheck size={14} />
+                ) : (
+                  <Bookmark size={14} />
+                )}
                 {bookmarked ? "Đã bookmark" : "Bookmark mission"}
               </button>
             </form>
@@ -185,8 +228,15 @@ export function MissionWorkspace({
                         name="label"
                         value={`W${mission.week} · ${mission.title} · ${label}`}
                       />
-                      <button type="submit" className="btn-secondary w-full text-xs">
-                        {active ? <BookmarkCheck size={13} /> : <Bookmark size={13} />}
+                      <button
+                        type="submit"
+                        className="btn-secondary w-full text-xs"
+                      >
+                        {active ? (
+                          <BookmarkCheck size={13} />
+                        ) : (
+                          <Bookmark size={13} />
+                        )}
                         {active ? `Đã lưu ${label}` : `Lưu ${label}`}
                       </button>
                     </form>
@@ -232,7 +282,10 @@ export function MissionWorkspace({
                 <ArrowRight size={15} />
               </Link>
             ) : bossFightId ? (
-              <Link href={"/incidents/" + bossFightId} className="btn-secondary">
+              <Link
+                href={"/incidents/" + bossFightId}
+                className="btn-secondary"
+              >
                 Week {mission.week} Boss Fight
                 <ArrowRight size={15} />
               </Link>
@@ -402,149 +455,162 @@ export function MissionWorkspace({
           )}
           {passUnlocked && !missionPassed && (
             <>
-          {mission.id === "w8-m2-configuration-freeze-change-impact" && (
-            <section className="card p-5">
-              <div className="eyebrow">Configuration freeze</div>
-              <h2 className="mt-1 font-bold text-white">Service Inventory</h2>
-              <p className="mt-2 text-xs leading-5 text-[#82909f]">
-                Điền từ Compose, .env.example và tài liệu thực tế. Không ghi giá trị secret.
-              </p>
-              <ValidatedForm formAction={saveEvidenceFormAction} className="mt-4">
-                <input type="hidden" name="missionId" value={mission.id} />
-                <input type="hidden" name="type" value="config" />
-                <input type="hidden" name="title" value="Configuration Freeze Service Inventory" />
-                <textarea
-                  name="content"
-                  className="field min-h-72 resize-y font-mono text-xs"
-                  minLength={80}
-                  defaultValue={serviceInventoryTemplate}
-                  required
-                />
-                <SubmitButton className="btn-secondary mt-3 w-full">
-                  Lưu Service Inventory evidence
-                </SubmitButton>
-              </ValidatedForm>
-            </section>
-          )}
-          <section className="card p-5">
-            <div className="eyebrow">Evidence vault</div>
-            <h2 className="mt-1 font-bold text-white">Nộp bằng chứng</h2>
-            <p className="mt-2 text-xs leading-5 text-[#82909f]">
-              Bắt buộc: {mission.requiredEvidence.join(" · ")}
-            </p>
-            <ValidatedForm
-              formAction={saveEvidenceFormAction}
-              className="mt-4 space-y-3"
-            >
-              <input type="hidden" name="missionId" value={mission.id} />
-              <label className="block text-xs text-[#96a2b0]">
-                Loại evidence
-                <select name="type" className="field mt-1" required>
-                  {evidenceTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block text-xs text-[#96a2b0]">
-                Tiêu đề
-                <input
-                  name="title"
-                  className="field mt-1"
-                  minLength={3}
-                  required
-                  placeholder="VD: Absolute path lab"
-                />
-              </label>
-              <label className="block text-xs text-[#96a2b0]">
-                Nội dung
-                <textarea
-                  name="content"
-                  className="field mt-1 min-h-28 resize-y"
-                  minLength={12}
-                  required
-                  placeholder="Lệnh, output, giải thích, verification..."
-                />
-              </label>
-              <label className="block text-xs text-[#96a2b0]">
-                URL tùy chọn
-                <input
-                  name="url"
-                  type="url"
-                  className="field mt-1"
-                  placeholder="https://github.com/..."
-                />
-              </label>
-              <SubmitButton className="btn-secondary w-full">
-                Lưu evidence
-              </SubmitButton>
-            </ValidatedForm>
-            {evidence.length > 0 && (
-              <div className="mt-4 border-t border-[#29333f] pt-3 text-xs text-[#86a18e]">
-                Đã lưu {evidence.length} evidence · {submittedEvidenceTypes.size} loại
-              </div>
-            )}
-          </section>
-          <section className="card p-5">
-            <div className="eyebrow">Knowledge gate</div>
-            <h2 className="mt-1 font-bold text-white">
-              Quiz · PASS ≥ {mission.quizPassScore}%
-            </h2>
-            {quizAttempts[0] && (
-              <div
-                className={`mt-3 rounded-lg border p-3 text-sm ${quizAttempts[0].passed ? "border-[#41643b] bg-[#162415] text-[#b7e679]" : "border-[#693d3d] bg-[#271617] text-[#ee9999]"}`}
-              >
-                Lần gần nhất: <strong>{quizAttempts[0].score}%</strong> ·{" "}
-                {quizAttempts[0].passed ? "PASS" : "FAIL"}
-              </div>
-            )}
-            <ValidatedForm
-              formAction={submitQuizFormAction.bind(null, mission.id)}
-              className="mt-4 space-y-5"
-            >
-              {mission.quiz.map((question, index) => (
-                <fieldset key={question.id}>
-                  <legend className="text-sm font-semibold leading-5 text-[#d9e1e8]">
-                    {index + 1}. {question.prompt}
-                  </legend>
-                  {question.type === "multiple-choice" ? (
-                    <div className="mt-2 space-y-2">
-                      {question.options?.map((option) => (
-                        <label
-                          key={option}
-                          className="flex cursor-pointer gap-2 rounded border border-[#2c3642] bg-[#10161e] p-2 text-xs text-[#a9b4c0]"
-                        >
-                          <input
-                            type="radio"
-                            name={question.id}
-                            value={option}
-                            required
-                          />
-                          {option}
-                        </label>
-                      ))}
-                    </div>
-                  ) : (
-                    <textarea
-                      className="field mt-2 min-h-20 text-xs"
-                      name={question.id}
-                      required
-                      minLength={question.type === "self-explanation" ? 40 : 1}
-                      placeholder={
-                        question.type === "self-explanation"
-                          ? "Giải thích ít nhất 40 ký tự..."
-                          : "Câu trả lời ngắn..."
-                      }
+              {mission.id === "w8-m2-configuration-freeze-change-impact" && (
+                <section className="card p-5">
+                  <div className="eyebrow">Configuration freeze</div>
+                  <h2 className="mt-1 font-bold text-white">
+                    Service Inventory
+                  </h2>
+                  <p className="mt-2 text-xs leading-5 text-[#82909f]">
+                    Điền từ Compose, .env.example và tài liệu thực tế. Không ghi
+                    giá trị secret.
+                  </p>
+                  <ValidatedForm
+                    formAction={saveEvidenceFormAction}
+                    className="mt-4"
+                  >
+                    <input type="hidden" name="missionId" value={mission.id} />
+                    <input type="hidden" name="type" value="config" />
+                    <input
+                      type="hidden"
+                      name="title"
+                      value="Configuration Freeze Service Inventory"
                     />
-                  )}
-                </fieldset>
-              ))}
-              <SubmitButton className="btn-secondary w-full">
-                Nộp quiz
-              </SubmitButton>
-            </ValidatedForm>
-          </section>
+                    <textarea
+                      name="content"
+                      className="field min-h-72 resize-y font-mono text-xs"
+                      minLength={80}
+                      defaultValue={serviceInventoryTemplate}
+                      required
+                    />
+                    <SubmitButton className="btn-secondary mt-3 w-full">
+                      Lưu Service Inventory evidence
+                    </SubmitButton>
+                  </ValidatedForm>
+                </section>
+              )}
+              <section className="card p-5">
+                <div className="eyebrow">Evidence vault</div>
+                <h2 className="mt-1 font-bold text-white">Nộp bằng chứng</h2>
+                <p className="mt-2 text-xs leading-5 text-[#82909f]">
+                  Bắt buộc: {mission.requiredEvidence.join(" · ")}
+                </p>
+                <ValidatedForm
+                  formAction={saveEvidenceFormAction}
+                  className="mt-4 space-y-3"
+                >
+                  <input type="hidden" name="missionId" value={mission.id} />
+                  <label className="block text-xs text-[#96a2b0]">
+                    Loại evidence
+                    <select name="type" className="field mt-1" required>
+                      {evidenceTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="block text-xs text-[#96a2b0]">
+                    Tiêu đề
+                    <input
+                      name="title"
+                      className="field mt-1"
+                      minLength={3}
+                      required
+                      placeholder="VD: Absolute path lab"
+                    />
+                  </label>
+                  <label className="block text-xs text-[#96a2b0]">
+                    Nội dung
+                    <textarea
+                      name="content"
+                      className="field mt-1 min-h-28 resize-y"
+                      minLength={12}
+                      required
+                      placeholder="Lệnh, output, giải thích, verification..."
+                    />
+                  </label>
+                  <label className="block text-xs text-[#96a2b0]">
+                    URL tùy chọn
+                    <input
+                      name="url"
+                      type="url"
+                      className="field mt-1"
+                      placeholder="https://github.com/..."
+                    />
+                  </label>
+                  <SubmitButton className="btn-secondary w-full">
+                    Lưu evidence
+                  </SubmitButton>
+                </ValidatedForm>
+                {evidence.length > 0 && (
+                  <div className="mt-4 border-t border-[#29333f] pt-3 text-xs text-[#86a18e]">
+                    Đã lưu {evidence.length} evidence ·{" "}
+                    {submittedEvidenceTypes.size} loại
+                  </div>
+                )}
+              </section>
+              <section className="card p-5">
+                <div className="eyebrow">Knowledge gate</div>
+                <h2 className="mt-1 font-bold text-white">
+                  Quiz · PASS ≥ {mission.quizPassScore}%
+                </h2>
+                {quizAttempts[0] && (
+                  <div
+                    className={`mt-3 rounded-lg border p-3 text-sm ${quizAttempts[0].passed ? "border-[#41643b] bg-[#162415] text-[#b7e679]" : "border-[#693d3d] bg-[#271617] text-[#ee9999]"}`}
+                  >
+                    Lần gần nhất: <strong>{quizAttempts[0].score}%</strong> ·{" "}
+                    {quizAttempts[0].passed ? "PASS" : "FAIL"}
+                  </div>
+                )}
+                <ValidatedForm
+                  formAction={submitQuizFormAction.bind(null, mission.id)}
+                  className="mt-4 space-y-5"
+                >
+                  {mission.quiz.map((question, index) => (
+                    <fieldset key={question.id}>
+                      <legend className="text-sm font-semibold leading-5 text-[#d9e1e8]">
+                        {index + 1}. {question.prompt}
+                      </legend>
+                      {question.type === "multiple-choice" ? (
+                        <div className="mt-2 space-y-2">
+                          {question.options?.map((option) => (
+                            <label
+                              key={option}
+                              className="flex cursor-pointer gap-2 rounded border border-[#2c3642] bg-[#10161e] p-2 text-xs text-[#a9b4c0]"
+                            >
+                              <input
+                                type="radio"
+                                name={question.id}
+                                value={option}
+                                required
+                              />
+                              {option}
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
+                        <textarea
+                          className="field mt-2 min-h-20 text-xs"
+                          name={question.id}
+                          required
+                          minLength={
+                            question.type === "self-explanation" ? 40 : 1
+                          }
+                          placeholder={
+                            question.type === "self-explanation"
+                              ? "Giải thích ít nhất 40 ký tự..."
+                              : "Câu trả lời ngắn..."
+                          }
+                        />
+                      )}
+                    </fieldset>
+                  ))}
+                  <SubmitButton className="btn-secondary w-full">
+                    Nộp quiz
+                  </SubmitButton>
+                </ValidatedForm>
+              </section>
             </>
           )}
           <section className="card p-5">
@@ -575,6 +641,35 @@ export function MissionWorkspace({
           </section>
         </aside>
       </div>
+      {mission.week === 1 && mission.order <= 3 && (
+        <section id="verification-pilot" className="card mt-6 p-5">
+          <h2 className="text-xl font-bold">DX-Verify · Action evidence</h2>
+          <p className="my-3 text-sm leading-6">
+            Chạy verifier trong Ubuntu theo phần cuối bài. Dán JSON bên dưới; dữ
+            liệu chỉ được lưu làm test-result, không tự PASS hay tăng skill.
+            File tồn tại chưa chứng minh bạn hiểu bài.
+          </p>
+          {mutable ? (
+            <ValidatedForm formAction={importVerificationFormAction}>
+              <input type="hidden" name="missionId" value={mission.id} />
+              <label className="block text-sm">
+                Verification report JSON
+                <textarea
+                  name="report"
+                  className="field my-3 min-h-40 font-mono text-xs"
+                  required
+                  maxLength={10000}
+                />
+              </label>
+              <SubmitButton>Lưu verification report</SubmitButton>
+            </ValidatedForm>
+          ) : (
+            <p className="text-sm">
+              Chỉ nộp khi mission đang mở cho thực hành và chưa PASS.
+            </p>
+          )}
+        </section>
+      )}
     </div>
   );
 }
