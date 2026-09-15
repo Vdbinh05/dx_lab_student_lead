@@ -1,6 +1,6 @@
 # v0.3.0 release preparation — 2026-09-16
 
-Status: **Production migration verified; main deployment pending**. Production remains healthy v0.2.0 on 2026-09-16.
+Status: **NO — production verification incomplete; application rolled back**. Production is healthy v0.2.0 on 2026-09-16. The additive RecallReview migration remains applied.
 
 ## Starting state
 
@@ -49,6 +49,25 @@ Database verification now probes recall without overwriting existing schedules a
 - Still-deployed v0.2.0 health PASS after migration.
 - Known-good rollback deployment: `dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G`, `https://dx-lab-student-lead-8mnqfof1q-binhs-projects-438b34e8.vercel.app`. Application rollback retains the additive table; no reverse SQL or data reset.
 
-## Remaining release sequence
+## Git-triggered release and live verification
 
-Push feature preparation, merge into current main normally and push main. Verify Git-triggered deployment Ready for the exact commit, then complete live route/feature/persistence and validated restore checks before tagging. No release tag exists yet. M1–M3 still require learner review before Teaching V2/V3 can be called Gold Standard.
+- Feature preparation `da01b82` and migration evidence `5c7c6ef` pushed normally to `refactor/learning-architecture-v3`.
+- Fetched current main and merged with a normal merge commit: `488c52b26be0abd15f996f9d0170946b08e70737`. Main pushed without force.
+- Existing Vercel project built deployment `dpl_64L1cLZuef5JC6aXFq8CZ1N2ikHm`, URL `https://dx-lab-student-lead-27ra8ahyg-binhs-projects-438b34e8.vercel.app`. Vercel API confirmed READY, source `git`, ref `main`, exact SHA above.
+- Both `https://dx-lab-student-lead.vercel.app/api/health` and existing custom domain `https://learndxlab.bynh.id.vn/api/health` returned healthy 0.3.0 before rollback.
+- Live browser route/navigation/M1–M3 checks PASS at 1440, 950 and 390 pixels. Routes: home, Today, roadmap, Week 1, labs, incidents, net-01, skills, evidence, exams, oral defense, readiness, glossary, search, bookmarks and settings; M1–M3 mission pages separately checked. Today/Warm-up visible, incident form has four groups, active navigation correct, lesson reveals/keyboard controls/code/anchors checked, no horizontal overflow.
+- Vercel error-log query for that deployment returned no error logs during this window.
+- The persistence smoke did NOT complete. Its cleanup comparison failed because validated import updates `LearnerProfile.updatedAt`. That cleanup exception obscured the initial smoke exception; the original cause was not captured. This is incomplete verification, not a confirmed application regression. Do not claim recall/report/incident production UI checks passed.
+- Validated Settings import completed. A subsequent direct comparison with the pre-migration snapshot confirmed every other existing table unchanged, profile identity/name/creation unchanged, only profile `updatedAt` changed, and RecallReview empty. Probe learner state is absent. Private live backup and smoke script remain in ignored `artifacts/release-v0.3.0/`.
+
+## Rollback and final state
+
+Per the release stop condition, ran `vercel rollback dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G --yes`. Vercel confirmed success. Both public hostnames now return `{"status":"ok","version":"0.2.0"}`. No reverse SQL, reset, reseed or destructive data correction was used. Profile import audit timestamp was left intact.
+
+Boss Fight definitions (`content/incidents.json`) and progression/gate engine (`src/lib/progress-engine.ts`) have no diff from pre-release main; existing local gate QA passed. No release tag was created or pushed.
+
+Main still contains the v0.3.0 merge; active production is the rolled-back v0.2.0 deployment. This status update is committed on the existing feature branch to avoid another main-triggered release. Before a future deployment, fix smoke error reporting so cleanup cannot obscure the primary failure, compare import audit metadata appropriately, diagnose the original unfinished persistence check, then repeat the required live persistence/report/incident/restore verification. Tag only after all checks pass.
+
+M1–M3 still require learner review before Teaching V2/V3 can be called Gold Standard.
+
+LEARNING ARCHITECTURE V3 PRODUCTION READY: NO
