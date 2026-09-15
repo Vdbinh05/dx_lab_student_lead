@@ -103,4 +103,4 @@ Docker smoke now uses a unique Compose project as well as a unique volume, preve
 
 After database verification: commit release preparation, push the feature branch, fetch, merge into current main, and push main to trigger the existing Vercel project. Verify Ready and exact Git commit, health version 0.3.0, routes, feature persistence and cleanup. Only then create/push annotated v0.3.0. Production readiness does not establish Teaching Gold Standard; M1–M3 still need learner review.
 
-Current release blockers: Vercel CLI authentication and Docker Desktop Linux engine startup. Detailed status and backup references are in `docs/release-v0.3.0.md`.
+Docker smoke and Vercel authentication now PASS. The additive production migration and data-preservation probes PASS; main deployment and live verification are pending. Detailed status and backup references are in `docs/release-v0.3.0.md`.
