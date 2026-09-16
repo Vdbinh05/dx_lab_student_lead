@@ -1,5 +1,7 @@
 # v0.3.0 persistence smoke diagnosis — 2026-09-16
 
+Historical diagnosis record. The subsequently authorized final production smoke passed; see [release verification](release-v0.3.0.md). The harness now has an explicit production-origin opt-in; its default is still loopback-only.
+
 Scope: local harness diagnosis on `refactor/learning-architecture-v3`. No production request, migration, learner-data mutation, Vercel operation, deployment, main merge/push or release tag during this diagnosis.
 
 ## Original failure: evidence boundary

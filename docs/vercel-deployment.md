@@ -86,7 +86,7 @@ Attach a custom hostname only when the exact hostname is known. Vercel provides 
 
 ## v0.3.0 release preparation — 2026-09-16
 
-Release preparation is on `refactor/learning-architecture-v3`. Production has **not** been upgraded yet. The additive `20260915090000_recall_review` migration creates only RecallReview; v0.2.0 continues to use its existing tables. No seed/reset is required.
+Release preparation is on `refactor/learning-architecture-v3`. Production is now **v0.3.0**, verified on both stable domains. The additive `20260915090000_recall_review` migration creates only RecallReview; v0.2.0 continues to use its existing tables. No seed/reset is required.
 
 Before production changes, export and validate `/api/backup`, retain a private snapshot of existing table/schema/migration-history data, and pass QA including Docker smoke. Run the existing migration runner with production-scoped environment injection and a pending-migration guard:
 
@@ -103,4 +103,4 @@ Docker smoke now uses a unique Compose project as well as a unique volume, preve
 
 After database verification: commit release preparation, push the feature branch, fetch, merge into current main, and push main to trigger the existing Vercel project. Verify Ready and exact Git commit, health version 0.3.0, routes, feature persistence and cleanup. Only then create/push annotated v0.3.0. Production readiness does not establish Teaching Gold Standard; M1–M3 still need learner review.
 
-Docker smoke and Vercel authentication PASS. The additive production migration and data-preservation probes PASS. Main deployment reached Ready on v0.3.0, but the live persistence smoke did not complete and its cleanup assertion detected the profile import timestamp change. The application was rolled back to healthy v0.2.0; the additive table remains. No v0.3.0 tag was created. Main contains the release merge, while active production is the prior deployment. Detailed verification, cleanup, rollback and backup references are in `docs/release-v0.3.0.md`.
+Final production promotion and corrected persistence smoke PASS. Both stable domains serve v0.3.0. No migration was rerun; learner state was restored and verified. See [release evidence](release-v0.3.0.md). Use `npm run verify:persistence -- --production` only with an explicitly authorized production test window and `DXLAB_SMOKE_URL` set to one of the two approved HTTPS origins. Default harness execution remains local-only.

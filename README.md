@@ -37,7 +37,7 @@ See [docs/architecture.md](docs/architecture.md), [docs/security.md](docs/securi
 
 ## Learning Architecture V3 pilot
 
-Branch-only learner review: [architecture and local migration/rollback](docs/learning-architecture-v3.md), [implementation and QA](docs/learning-v3-implementation-report.md). Scheduled recall and local M1–M3 verification preserve Teaching V2 and existing gates. Production remains v0.2.0; do not deploy this branch against an unmigrated database.
+Learning Architecture V3: [architecture and local migration/rollback](docs/learning-architecture-v3.md), [implementation and QA](docs/learning-v3-implementation-report.md). Scheduled recall and local M1–M3 verification preserve Teaching V2 and existing gates. Production v0.3.0 is verified with the additive RecallReview migration; see [release verification](docs/release-v0.3.0.md). M1–M3 remain learner-review candidates.
 
 ## Local setup
 

@@ -3,6 +3,7 @@ import {
   assertRestored,
   changedLearnerFields,
   localSmokeUrl,
+  productionSmokeUrl,
   runWithCleanup,
 } from "./persistence-smoke-support";
 import type { LearnerBackup } from "../src/lib/backup";
@@ -132,4 +133,21 @@ describe("strict semantic comparison", () => {
     ])
       expect(() => localSmokeUrl(url)).toThrow("loopback");
   });
+});
+
+it("production opt-in accepts only the exact approved HTTPS origins", () => {
+  expect(productionSmokeUrl("https://dx-lab-student-lead.vercel.app")).toBe(
+    "https://dx-lab-student-lead.vercel.app",
+  );
+  expect(productionSmokeUrl("https://learndxlab.bynh.id.vn")).toBe(
+    "https://learndxlab.bynh.id.vn",
+  );
+  for (const value of [
+    "https://example.com",
+    "http://dx-lab-student-lead.vercel.app",
+    "https://user@dx-lab-student-lead.vercel.app",
+    "https://dx-lab-student-lead.vercel.app.evil.test",
+    "https://dx-lab-student-lead.vercel.app/path",
+  ])
+    expect(() => productionSmokeUrl(value)).toThrow("approved HTTPS origin");
 });

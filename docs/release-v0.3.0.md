@@ -1,75 +1,74 @@
-# v0.3.0 release preparation — 2026-09-16
+# DX-Lab SV1 Training OS v0.3.0 — production release
 
-Status: **NO — production verification incomplete; application rolled back**. Production is healthy v0.2.0 on 2026-09-16. The additive RecallReview migration remains applied.
+Status: **Production verification PASS — 2026-09-16**.
 
-## Starting state
+## Release source and deployment
 
-Feature branch `refactor/learning-architecture-v3` and its remote matched `637e799`. Worktree was clean. `main` and origin/main matched `a3ed4a0`; existing tags were preserved. Git remote access succeeded.
+- Application version: `0.3.0`.
+- Fully verified application source: `633b0f81664523c3265119436a0a9559a0ef0eaa`, main, Git-triggered build.
+- Existing project: `dx-lab-student-lead`, `prj_fK0YdAXmOZi8YyOi2mqboSKAK0vM`, team `binhs-projects-438b34e8`.
+- Verified and promoted deployment: `dpl_Egtpy5NJgm2UqvQ3quFgamXrmd62`.
+- Deployment URL: https://dx-lab-student-lead-fpscpzqx7-binhs-projects-438b34e8.vercel.app
+- Created: 2026-09-16T08:23:00.212Z; Production, Ready, Git ref main and exact source SHA confirmed through Vercel metadata.
+- Authenticated candidate health and backup export passed before promotion; deployment protection was not disabled.
+- Promoted this exact existing deployment using Vercel promote. No unrelated deploy, new project, DNS or credential change.
+- Stable URL: https://dx-lab-student-lead.vercel.app
+- Existing custom domain: https://learndxlab.bynh.id.vn
+- Both HTTPS health endpoints returned `{"status":"ok","version":"0.3.0"}` after promotion.
 
-## Private backup
+Final release source is the commit referenced by annotated tag `v0.3.0` (`git rev-parse v0.3.0^{commit}`). The final documentation/tooling follow-up contains no application, curriculum, schema, dependency or Docker-runtime changes relative to the verified source above. Its Git-triggered deployment must be Ready for that exact commit and pass health/route checks before creating the tag. This avoids embedding a self-referential commit hash in its own content.
 
-Existing production `/api/backup` export was downloaded and validated before any production change:
+## Turso and backups
 
-- Local file: `artifacts/release-v0.3.0/production-before-v3-1789466866901.json` (ignored by Git).
-- SHA-256: `005e0190276347602de974eb65ae1a88196b8d537b04e594dcc65f41be9b4b95`.
-- Exported version: 0.2.0. Counts: 1 mission-progress row, 2 quiz attempts, 50 skills; no evidence, incident attempts, notes, bookmarks, weekly gates or oral reflections.
-- The fresh pre-migration export and supplemental schema/table snapshot are recorded below. The stopped-file SQLite backup workflow applies to local/Docker databases, not hosted Turso.
+No migration, reset or seed was run during final promotion. Read-only checks confirmed all four expected migration-history entries and the six-column RecallReview schema. Initial raw recall-checksum comparison differed only because of LF/CRLF checkout conversion; an exact line-ending variant matched the recorded checksum. SQL semantics and migration history were left unchanged. Three earlier checksums matched byte-for-byte.
 
-## Reviewed changes
+Private ignored backups:
 
-RecallReview migration is CREATE TABLE only: no DROP, rename, reset or seed. Existing tables and v0.2.0 queries are unaffected. Runtime compatibility with the migrated production database passed before merging main.
+- Original pre-V3 export: `artifacts/release-v0.3.0/production-before-v3-1789466866901.json`; revalidated; SHA-256 `005e0190276347602de974eb65ae1a88196b8d537b04e594dcc65f41be9b4b95`.
+- Fresh pre-promotion export: `artifacts/release-v0.3.0/production-before-v3-1789548119453.json`; SHA-256 `8a2fbec686878e630b7dd35810a9ebea270e860edaea907515c8f275c39c6e75`.
+- Supplemental 13-table/schema/history snapshot: `artifacts/release-v0.3.0/pre-promotion-1789548140881.json`; SHA-256 `ab2d9bac6c8b12d274e85af68ae6a18cf1a9d9f571dca54c999f48ee733b1da6`.
 
-Preparation updates package/application and Docker image versions to 0.3.0, registers the recall migration in the existing Turso runner, and adds `--only-pending=20260915090000_recall_review` to refuse unexpected pending migrations. Existing checksums/history remain authoritative.
+Baseline learner counts: 1 profile, 1 settings row, 1 mission-progress row, 2 quiz attempts, 50 skills; remaining learner tables empty. A post-smoke direct Turso comparison confirmed all 13 tables semantically preserved, excluding only the profile update audit timestamp.
 
-Production review found that backup restore previously deleted incident assistance without exporting it. The optional `incidentAssistance` backup field now round-trips current hint state; importing old backups preserves current assistance rather than clearing it. No schema change is needed for that fix. Existing grading, gate and Boss Fight code is unchanged. Keep the pre-V3 export for old-app rollback because v0.2.0 rejects new backup fields.
+## Production persistence smoke — PASS
 
-Database verification now probes recall without overwriting existing schedules and cleans its temporary records. Docker smoke now uses a unique Compose project as well as a unique volume, avoiding interference with a learner container.
+Marker: `release-smoke-v0.3.0-1789548239885-b3f8e447-f5a0-4378-a41c-f984825e4ac8`.
 
-## Completed local QA
+Private baseline, restored export, stage log, trace, recall ID, verifier payload and evidence ID are under `artifacts/persistence-diagnosis/` in the matching marker directory.
 
-- Lint PASS.
-- Typecheck PASS.
-- Unit/integration tests PASS: 51 tests across 10 files, including new/legacy assistance restore behavior.
-- Build PASS.
-- Repository safety PASS.
-- Release/curriculum audit PASS: 57 missions, 300 mission questions, 160 weekly questions, 8 Boss Fights, 50 skills, 24 oral prompts and 20 required routes.
-- Browser QA PASS: 16 Chromium tests, including current gates, backup/restore and V3 desktop/mobile behavior.
-- Local `db:verify` PASS on the isolated E2E database, including recall and cleanup.
-- Local production-build `/api/health`: HTTP 200, `{"status":"ok","version":"0.3.0"}`.
-- Live production `/api/health`: HTTP 200, `{"status":"ok","version":"0.2.0"}`.
+- Unoccupied mission note/bookmark writes and separate-browser-context reads PASS.
+- Recall persisted with the expected one-day schedule; progress, quiz and skill state unchanged.
+- Malformed report rejected; valid report exported with the exact payload and persisted as evidence. No automatic competence or gate credit.
+- Safe, deliberately incomplete incident attempt persisted as FAIL; all nine reasoning fields and expandable history verified. No pre-existing assistance was consumed.
+- Export, validated Settings import, marker removal, full semantic state comparison and readiness comparison PASS.
+- Both smoke and cleanup errors remain independently captured by the corrected runner. There were no smoke or cleanup failures in this production persistence run.
 
-## Production preparation verified — 2026-09-16
+Exactly two equality exclusions: `learnerProfile.updatedAt` (Prisma updates it during profile restore) and envelope `exportedAt` (new export creation time). All other learner fields and timestamps stay strict; row order alone is normalized. No learner content, schedule, skill, gate, quiz, evidence, incident, note or bookmark was lost.
 
-- Docker smoke PASS, supplied by the operator after Linux engine recovery: `DOCKER DEPLOYMENT SMOKE PASS`; health 0.3.0; persistent-volume restart and validated UI import/restore PASS. Completed local QA was not repeated.
-- Normal Vercel CLI authentication verified. Existing project `dx-lab-student-lead`, ID `prj_fK0YdAXmOZi8YyOi2mqboSKAK0vM`, team `binhs-projects-438b34e8` confirmed. No new project created.
-- Original backup checksum rechecked. Fresh validated v0.2.0 backup: `artifacts/release-v0.3.0/production-before-v3-1789499805680.json`, SHA-256 `31a432ab57579ffb4c2765bb7e90a018801e513935d9a54f9e4b904979bfa5a3`.
-- Private schema/history/all-existing-table snapshot: `artifacts/release-v0.3.0/turso-before-v3-1789499811720.json`, SHA-256 `43ed3e85a6b7657f7761fd875fb619ccd5de2d92b51ffbabd9d4ee4fb1c0132a`.
-- Guarded documented Turso runner applied ONLY `20260915090000_recall_review`: four migration-history records, 13 application tables, 10 indexes.
-- Production `db:verify` PASS: learner, 50 skills, mission state, evidence, quiz, note, bookmark, recall and backup. Probe records cleaned. Comparison confirmed every pre-existing table unchanged.
-- Still-deployed v0.2.0 health PASS after migration.
-- Known-good rollback deployment: `dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G`, `https://dx-lab-student-lead-8mnqfof1q-binhs-projects-438b34e8.vercel.app`. Application rollback retains the additive table; no reverse SQL or data reset.
+The release-only `--production` opt-in accepts only the two exact HTTPS production origins. Default execution remains loopback-only, and fault injection is prohibited in production mode. Tests cover rejected alternate hosts, HTTP, credentials and paths. A production smoke must run without concurrent learner editing because validated import restores a snapshot.
 
-## Git-triggered release and live verification
+## Routes, features and regression
 
-- Feature preparation `da01b82` and migration evidence `5c7c6ef` pushed normally to `refactor/learning-architecture-v3`.
-- Fetched current main and merged with a normal merge commit: `488c52b26be0abd15f996f9d0170946b08e70737`. Main pushed without force.
-- Existing Vercel project built deployment `dpl_64L1cLZuef5JC6aXFq8CZ1N2ikHm`, URL `https://dx-lab-student-lead-27ra8ahyg-binhs-projects-438b34e8.vercel.app`. Vercel API confirmed READY, source `git`, ref `main`, exact SHA above.
-- Both `https://dx-lab-student-lead.vercel.app/api/health` and existing custom domain `https://learndxlab.bynh.id.vn/api/health` returned healthy 0.3.0 before rollback.
-- Live browser route/navigation/M1–M3 checks PASS at 1440, 950 and 390 pixels. Routes: home, Today, roadmap, Week 1, labs, incidents, net-01, skills, evidence, exams, oral defense, readiness, glossary, search, bookmarks and settings; M1–M3 mission pages separately checked. Today/Warm-up visible, incident form has four groups, active navigation correct, lesson reveals/keyboard controls/code/anchors checked, no horizontal overflow.
-- Vercel error-log query for that deployment returned no error logs during this window.
-- The persistence smoke did NOT complete. Its cleanup comparison failed because validated import updates `LearnerProfile.updatedAt`. That cleanup exception obscured the initial smoke exception; the original cause was not captured. This is incomplete verification, not a confirmed application regression. Do not claim recall/report/incident production UI checks passed.
-- Validated Settings import completed. A subsequent direct comparison with the pre-migration snapshot confirmed every other existing table unchanged, profile identity/name/creation unchanged, only profile `updatedAt` changed, and RecallReview empty. Probe learner state is absent. Private live backup and smoke script remain in ignored `artifacts/release-v0.3.0/`.
+All required routes passed at 1440, 950 and 390 pixels: home, Today, roadmap, Week 1, labs, incidents/net-01, skills, evidence, exams, oral defense, readiness, glossary, search, bookmarks and settings. M1–M3 were checked separately at each width.
 
-## Rollback and final state
+Today/current mission/next action and Warm-up render. Core execution, Capabilities, Assessment and Utility groups expand; Today stays prominent. M1–M3 diagrams, commands, predictions, lesson reveals, keyboard interaction and anchors work without page overflow. Incident forms retain four groups over the original nine fields. Import accepts JSON evidence only; no remote shell execution was introduced.
 
-Follow-up local-only harness diagnosis: [persistence smoke diagnosis](persistence-smoke-diagnosis.md). The unscoped note-read selector was reproduced failing locally; scoped reads and corrected cleanup/error isolation pass local persistence tests. The original production exception was never retained and remains unknown. No production re-verification or deployment occurred during diagnosis.
+Boss Fight definitions, mission/weekly gate engine and training-state implementation have no changes from v0.2.0. Existing local regression QA passed. Production probes preserve progress, quiz, skills, weekly state and readiness. Runtime error-log queries found no errors during final verification.
 
-Per the release stop condition, ran `vercel rollback dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G --yes`. Vercel confirmed success. Both public hostnames now return `{"status":"ok","version":"0.2.0"}`. No reverse SQL, reset, reseed or destructive data correction was used. Profile import audit timestamp was left intact.
+## QA carried forward
 
-Boss Fight definitions (`content/incidents.json`) and progression/gate engine (`src/lib/progress-engine.ts`) have no diff from pre-release main; existing local gate QA passed. No release tag was created or pushed.
+- Lint, typecheck, build, repository safety and release/curriculum audit PASS.
+- Existing application suite: 51 tests and 16 browser tests PASS.
+- Persistence diagnosis: 5 browser tests and 24 focused support/backup tests PASS.
+- Production origin opt-in: 18 support tests PASS; typecheck PASS.
+- Docker v0.3.0 smoke previously PASS: health 0.3.0, persistent-volume restart PASS and validated UI import/restore PASS. Not repeated because application/runtime inputs did not change.
 
-Main still contains the v0.3.0 merge; active production is the rolled-back v0.2.0 deployment. This status update is committed on the existing feature branch to avoid another main-triggered release. Before a future deployment, fix smoke error reporting so cleanup cannot obscure the primary failure, compare import audit metadata appropriately, diagnose the original unfinished persistence check, then repeat the required live persistence/report/incident/restore verification. Tag only after all checks pass.
+## Tag and rollback
 
-M1–M3 still require learner review before Teaching V2/V3 can be called Gold Standard.
+Release tag: annotated `v0.3.0`, message `DX-Lab SV1 Training OS v0.3.0 - Learning Architecture V3`. Create and push only after the final documentation/tooling commit is deployed and verified; never move existing tags. v0.1.0 and v0.2.0 are preserved.
 
-LEARNING ARCHITECTURE V3 PRODUCTION READY: NO
+No rollback was needed during this successful final promotion. Prior v0.2.0 rollback deployment remains `dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G`. If a genuine regression requires rollback, roll back the application only and retain the additive RecallReview table. Keep old-format exports for old-app recovery.
+
+## Limitations
+
+M1–M3 still require real learner testing before Teaching V2/V3 can be called Gold Standard. Local verifier reports are self-reported artifact observations, not proof of competency. The overwritten exception from the earlier abandoned production smoke remains unrecoverable; the corrected production smoke now passes independently.

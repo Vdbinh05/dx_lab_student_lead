@@ -13,15 +13,24 @@ import {
   assertRestored,
   changedLearnerFields,
   localSmokeUrl,
+  productionSmokeUrl,
   runWithCleanup,
 } from "./persistence-smoke-support";
 export async function runPersistenceSmoke(options: {
   baseUrl: string;
+  production?: boolean;
   reproduceOldSelector?: boolean;
   failSmoke?: boolean;
   failCleanup?: boolean;
 }) {
-  const base = localSmokeUrl(options.baseUrl);
+  if (
+    options.production &&
+    (options.reproduceOldSelector || options.failSmoke || options.failCleanup)
+  )
+    throw new Error("Fault injection is restricted to local diagnosis");
+  const base = options.production
+    ? productionSmokeUrl(options.baseUrl)
+    : localSmokeUrl(options.baseUrl);
   const marker = `release-smoke-v0.3.0-${Date.now()}-${randomUUID()}`;
   const directory = `artifacts/persistence-diagnosis/${marker}`;
   mkdirSync(directory, { recursive: true });

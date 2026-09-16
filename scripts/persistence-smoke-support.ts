@@ -111,3 +111,14 @@ export function localSmokeUrl(value: string) {
     );
   return url.origin;
 }
+
+/** Explicit release-only opt-in; never accepts arbitrary remote hosts or credentials. */
+export function productionSmokeUrl(value: string) {
+  const allowed = [
+    "https://dx-lab-student-lead.vercel.app",
+    "https://learndxlab.bynh.id.vn",
+  ];
+  if (!allowed.includes(value))
+    throw new Error("Production smoke requires an exact approved HTTPS origin");
+  return value;
+}
