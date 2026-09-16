@@ -62,6 +62,8 @@ Database verification now probes recall without overwriting existing schedules a
 
 ## Rollback and final state
 
+Follow-up local-only harness diagnosis: [persistence smoke diagnosis](persistence-smoke-diagnosis.md). The unscoped note-read selector was reproduced failing locally; scoped reads and corrected cleanup/error isolation pass local persistence tests. The original production exception was never retained and remains unknown. No production re-verification or deployment occurred during diagnosis.
+
 Per the release stop condition, ran `vercel rollback dpl_3mn5xJU2mxLdvcSvLXwh9kCXkX4G --yes`. Vercel confirmed success. Both public hostnames now return `{"status":"ok","version":"0.2.0"}`. No reverse SQL, reset, reseed or destructive data correction was used. Profile import audit timestamp was left intact.
 
 Boss Fight definitions (`content/incidents.json`) and progression/gate engine (`src/lib/progress-engine.ts`) have no diff from pre-release main; existing local gate QA passed. No release tag was created or pushed.
