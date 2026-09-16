@@ -18,6 +18,8 @@
     "test:e2e": "playwright test",
     "test:docker-smoke": "tsx scripts/docker-smoke.ts",
     "verify:live": "tsx scripts/verify-live-deployment.ts",
+    "verify:persistence": "tsx scripts/verify-persistence.ts",
+    "test:persistence": "playwright test e2e/persistence-diagnosis.spec.ts",
     "check:repo-safety": "node scripts/check-repo-safety.mjs",
     "check:release": "tsx scripts/release-audit.ts",
     "db:generate": "prisma generate",
